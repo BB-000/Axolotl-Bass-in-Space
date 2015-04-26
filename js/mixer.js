@@ -5,7 +5,7 @@ var isPlaying = false;      // Are we currently playing?
 var startTime;              // The start time of the entire sequence.
 
 var current16thNote;        // What note is currently last scheduled?
-var current32thNote;        // What note is currently last scheduled?
+var current64thNote = 0;        // What note is currently last scheduled?
 var barNumber = 0;
 var barNumberL = 0;
 var bar4Number = 0;
@@ -50,6 +50,16 @@ var gainNode4 = audioContext.createGain();
 var gainNode5 = audioContext.createGain();
 
 var planet1gain = audioContext.createGain();
+var planet2gain = audioContext.createGain();
+var planet3gain = audioContext.createGain();
+var planet4gain = audioContext.createGain();
+var planet5gain = audioContext.createGain();
+var planet6gain = audioContext.createGain();
+var planet7gain = audioContext.createGain();
+var planet8gain = audioContext.createGain();
+var planet9gain = audioContext.createGain();
+var planet10gain = audioContext.createGain();
+var planet11gain = audioContext.createGain();
 
 
 var filterD = audioContext.createBiquadFilter();
@@ -63,7 +73,18 @@ gainNode2.gain.value = 0.25;
 gainNode3.gain.value = 0.2;
 gainNode4.gain.value = 0.12;
 gainNode5.gain.value = 0.05;
+
 planet1gain.gain.value = 0.0;
+planet2gain.gain.value = 0.0;
+planet3gain.gain.value = 0.0;
+planet4gain.gain.value = 0.0;
+planet5gain.gain.value = 0.0;
+planet6gain.gain.value = 0.0;
+planet7gain.gain.value = 0.0;
+planet8gain.gain.value = 0.0;
+planet9gain.gain.value = 0.0;
+planet10gain.gain.value = 0.0;
+planet11gain.gain.value = 0.0;
 
 delay.delayTime.value = 0.413;          // DELAY TIME
 feedback.gain.value = 0.7;              // FEEDBACK AMOUNT

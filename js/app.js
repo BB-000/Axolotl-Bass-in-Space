@@ -96,6 +96,17 @@ function init() {
     ///////////////////////////////
     //starBackground = ctx.createPattern(resources.get('images/Stars.jpg'), 'repeat');
     spawnPlanet(1, PlanetMars);
+    spawnPlanet(1, PlanetBlue1);
+    spawnPlanet(1, PlanetBlue2);
+    spawnPlanet(1, PlanetPinkMosaic);
+    spawnPlanet(1, PlanetFlute);
+    spawnPlanet(1, PlanetCoconut);
+    spawnPlanet(1, PlanetBreakbeat);
+    spawnPlanet(1, PlanetWarble);
+    spawnPlanet(1, PlanetPlink);
+    spawnPlanet(1, PlanetFlange);
+    spawnPlanet(1, PlanetBlobby);
+
     //monsters.push(new PlanetMars());
     //setTimeout(loadSounds, 1000);
     loadSounds();
@@ -114,6 +125,7 @@ resources.load([
     'images/Hero.png',
     'images/Fish.png',
     'images/Prawn.png',
+    'images/BeetleBlue.png',
     'images/Bug.png',
     'images/Shark.png',
     'images/Mosquito.png',
@@ -121,13 +133,30 @@ resources.load([
     'images/blt.png',
     'images/spawn.png',
     'images/Mosquito2.png',
-    'images/PlanetMars.png'
+    'images/PlanetMars.png',
+    'images/PlanetBlueX.png',
+    'images/PlanetBlueHex2.png',
+    'images/JellyOrange.png',
+    'images/PlanetPink.png',
+    'images/JellyGreen.png',
+    'images/HeartGreenEyes.png',
+    'images/HeartGreen.png',
+    'images/Planet4.png',
+    'images/Planet5.png',
+    'images/Planet6.png',
+    'images/Planet7.png',
+    'images/Planet8.png',
+    'images/Planet9.png',
+    'images/Planet10.png',
+    'images/PlanetPink2.png'
+
 ]);
 resources.onReady(init);
 
 
 //var starBackground;
 var monsters = [];
+var powers = [];
 var planets = [];
 
 var bulletX;
@@ -185,13 +214,13 @@ function loadSounds() {
             'sounds/2-BASS.mp3',      //1
             'sounds/3-BASS2.mp3',    //2
             'sounds/4-BASS4.mp3',      //3
-            'sounds/cowbell1.wav',  //4
+            'sounds/FADEOUT-SOUND.mp3',  //4
             'sounds/conga1.wav',    //5
             'sounds/conga2.wav',    //6
             'sounds/conga3.wav',    //7
             'sounds/hat1.wav',      //8
             'sounds/9-TICK1.mp3', //9
-            'sounds/10-AMBIENCE1.mp3', // 10
+            'sounds/10-AMBIENCE1.mp3', // 10   //  Planet
             'sounds/11-AMBIENCE2.mp3',     //11
             'sounds/31-NPC-HAT.mp3',       //12
             'sounds/13-NPC-ZAP.wav',           //
@@ -199,7 +228,7 @@ function loadSounds() {
             'sounds/15-NPC-HIT1.mp3',     // 15
             'sounds/16-NPC-HIT2.mp3',
             'sounds/17-NPC-HIT3.wav',       //
-            'sounds/18-NPC-BREAK1.mp3',     //
+            'sounds/18-SHOOT3.mp3',     //
             'sounds/19-NPC-ZAP1.mp3',
             'sounds/20-NPC-ZAP2.m4a',       //  20
             'sounds/21-NPC-LOOP1.mp3',
@@ -208,7 +237,42 @@ function loadSounds() {
             'sounds/24-SHOOTLOOP1.mp3',       // 24
             'sounds/25-NPC-CLAP1.mp3',       // 25
             'sounds/26-PLANET-LOOP1.mp3',       // 26
-            'sounds/FADEOUT-SOUND.mp3'        // 27
+            'sounds/27-PLANET-LOOP2A.mp3',        // 27
+            'sounds/28-PLANET-LOOP2B.mp3',        // 28
+            'sounds/29-PLANET-LOOP3.mp3',        // 29
+            'sounds/32-NPC-STUTTERA.mp3',        // 30
+            'sounds/31-SHOOT4.mp3',        // 31
+            'sounds/PLANET-LOOP4.mp3',        // 32
+            'sounds/BREAKBEAT1.mp3',        // 33
+            'sounds/BREAKBEAT2.mp3',        // 34
+            'sounds/BREAKBEAT3.mp3',        // 35
+            'sounds/BREAKBEAT4.mp3',        // 36
+            'sounds/BREAKBEAT5.mp3',        // 37
+            'sounds/BREAKBEAT6.mp3',        // 38
+            'sounds/BREAKBEAT7.mp3',        // 39
+            'sounds/BREAKBEAT8.mp3',       // 40
+            'sounds/BREAKBEAT9.mp3',       // 41
+            'sounds/BREAKBEAT10.mp3',       // 42
+            'sounds/BREAKBEAT11.mp3',       // 43
+            'sounds/BREAKBEAT12.mp3',       // 44
+            'sounds/BREAKBEAT13.mp3',       // 45
+            'sounds/BREAKBEAT14.mp3',       // 46
+            'sounds/BREAKBEAT15.mp3',       // 47
+            'sounds/BREAKBEAT16.mp3',       // 48
+            'sounds/PLANET-LOOP4A.mp3',       // 49
+            'sounds/PLANET-LOOP4B.mp3',       // 50
+            'sounds/PLANET-LOOP5A.mp3',       // 51
+            'sounds/PLANET-LOOP5B.mp3',       // 52
+            'sounds/PLANET-LOOP5C.mp3',       // 53
+            'sounds/PLANET-LOOP5D.mp3',       // 54
+            'sounds/PLANET-LOOP6A.mp3',       // 55
+            'sounds/PLANET-LOOP7A.mp3',       // 56
+            'sounds/PLANET-LOOP7B.mp3',       // 57
+            'sounds/NPC-HITLONG9A.mp3',       // 58
+            'sounds/NPC-HITLONG9B.mp3',       // 59
+            'sounds/NPC-STUTTERB.mp3'      // 60
+
+
         ],
         finishedLoading
     );
@@ -221,7 +285,7 @@ function setNoteReady(obj) {
 
 //////////////////////////////////////////////  !  i Must be size of Array!!  ******
 function finishedLoading(bufferList) {
-    for (var i = 0; i < 28; i += 1) {
+    for (var i = 0, l = bufferList.length; i < l; i += 1) {
         var source = audioContext.createBufferSource();
         source.buffer = bufferList[i];
         source.connect(audioContext.destination);
@@ -233,7 +297,7 @@ function finishedLoading(bufferList) {
         samplebb.push(note);
     }
     //start();
-    play();
+    setTimeout(play, 1000);
 }
 
 
@@ -274,36 +338,42 @@ function nextNote() {
                                           // tempo value to calculate beat length.
     nextNoteTime += 0.25 * secondsPerBeat;    // Add beat length to last beat time
 
-    current16thNote++;    // Advance the beat number, wrap to zero
-    //current32thNote += 1;    // Advance the beat number, wrap to zero
-    //console.log(current32thNote);
+    current16thNote++;    // Advance the beat number,wrap to zero
+    current64thNote++;    // Advance the beat number, wrap to zero
+    //console.log(current64thNote);
     if (current16thNote === 16) {
         current16thNote = 0;
         barNumber += 1;
         barNumberL += 1;
+        console.log("bar number :  " + barNumber);
+
         //console.log("bar number : " + barNumber);
-        //console.log(barNumberL + ":  L L L ");
+        //console.log("2 bar number l" + barNumberL);
 
     }
+    if (current64thNote === 64) {
+        current64thNote = 0;
+        bar4Number += 1;
+        //console.log("bar4 number" + bar4Number);
+
+    }
+
     if (barNumberL % 4 === 0 && current16thNote === 0) {
         barNumberL = 0;
     }
-    //if (current32thNote === 32) {
-    //    current32thNote = 0;
-    //    //barNumber += 1;
-    //    //console.log("bar number : " + barNumber);
-    //}
 
-    if (barNumber % 4 === 0 && current16thNote === 0) {
-        bar4Number += 1;
-        //console.log("bar4 number" + bar4Number);
-        //console.log("bar 4 number : " + bar4Number);
-    }
+
+    //if (barNumber % 4 === 0 && current16thNote === 0) {
+    //    bar4Number += 1;
+    //    console.log("bar4 number" + bar4Number);
+    //    //console.log("bar 4 number : " + bar4Number);
+    //}
 
     if (barNumber % 16 === 0 && current16thNote === 0) {
         bar16Number += 1;
         //console.log("bar 16 number : " + bar16Number);
     }
+
 }
 
 /////  ***  SCHEDULE EVERYTHING  ***
@@ -317,11 +387,11 @@ function scheduleNote(beatNumber, time) {
         return; // we're not playing non-quarter 8th notes
 
     // create an oscillator    //   create sample
-    var osc = audioContext.createOscillator();
-    osc.connect(audioContext.destination);
-
-    var osc2 = audioContext.createOscillator();
-    osc2.connect(audioContext.destination);
+    //var osc = audioContext.createOscillator();
+    //osc.connect(audioContext.destination);
+    //
+    //var osc2 = audioContext.createOscillator();
+    //osc2.connect(audioContext.destination);
 
     ///   PLAYER SHOOT      ///
     if (shootx) {
@@ -361,16 +431,16 @@ function scheduleNote(beatNumber, time) {
         spawnBoulder(1, Boulder);
         //}
     }
-    if (score > 10 && score < 80000) {
-        if (barNumber % 4 === 0 && beatNumber === 0) {
-            playSound(samplebb[10], gainNode4);
-        }
-    }
-    if (score > 20000) {
-        if (beatNumber === 0) {
-            playSound(samplebb[22], gainNode4);
-        }
-    }
+    //if (score > 10 && score < 80000) {
+    //    if (barNumber % 4 === 0 && beatNumber === 0) {
+    //        playSound(samplebb[10], gainNode4);
+    //    }
+    //}
+    //if (score > 20000) {
+    //    if (beatNumber === 0) {
+    //        playSound(samplebb[22], gainNode4);
+    //    }
+    //}
 
     //if (score > 20) {
     //    if (barNumber % 8 === 0 && beatNumber === 0) {
@@ -384,11 +454,11 @@ function scheduleNote(beatNumber, time) {
     //        playSound(samplebb[22], gainNode3);
     //    }
     //}
-    if (score > 70000) {
-        if (bar4Number % 16 === 0) {
-            playSound(samplebb[11], gainNode3);
-        }
-    }
+    //if (score > 70000) {
+    //    if (bar4Number % 16 === 0) {
+    //        playSound(samplebb[11], gainNode3);
+    //    }
+    //}
     if (score > 10000) {  // hihats
         if (barNumber % 4 === 0 && beatNumber === 0) {
             playSound(samplebb[23], gainNode3);
@@ -397,15 +467,38 @@ function scheduleNote(beatNumber, time) {
     }
 
 
-    if (planet1play === true) {
-        if (barNumber % 4 === 0)
-            if (current16thNote % 1 === 0) {
-                playSound(samplebb[26], planet1gain);
+    //if (planet1play === true) {
+    //    if (barNumber % 8 === 0)
+    //        if (current16thNote === 0) {
+    //            playSound(samplebb[26], planet1gain);
+    //            //console.log("xxxxx");
+    //        }
+    //}
+    //
+    //if (barNumber % 16 === 0 && current16thNote === 0){
+    //    playSound(samplebb[27], planet2gain);
+    //    //console.log("playeddd");
+    //
+    //}
+
+
+    for (z in planets) {
+        var planet = planets[z];
+        if (window[planet.token] === true) {
+            if (barNumber % planet.timing === 0 && current16thNote === 0) {
+                if (!planet.planetDice) {
+                    playSound(samplebb[planet.sound], planet.channel);
+                } else {
+                    playSound(samplebb[rand(planet.soundMin, planet.soundMax)], planet.channel);
+                    console.log("planeplayed");
+                }
+                //console.log("played" + planet.monsterImage);
             }
+        }
     }
 
 
-    // SPAWN ENEMIES   //
+    //SPAWN ENEMIES   //
     if (barNumber % 4 === 0 && beatNumber === 0) {
         //spawnMonster(5, monsterz[Math.floor(Math.random() * monsterz.length)]);
         //var monst = monsterlist_easy[2];
@@ -419,10 +512,12 @@ function scheduleNote(beatNumber, time) {
             });
             spawnMonster(monsta.getFlock(), monsterlist_easy[random_easy]);
             //monsterlist_easy[random_easy];
-            //console.log("spawned_easy");
-            console.log(monsta.getFlock());
+            console.log("spawned_easy");
+            //console.log(monsta.getFlock());
             //console.log(monsterlist_easy[random_easy]);
-            monster = null;
+            monsta = null;
+
+
         } else if (bar4Number > 8) {
             var random_med = rand(0, monsterlist_med.length - 1);
             var monsta = new monsterlist_med[random_med]({
@@ -430,53 +525,59 @@ function scheduleNote(beatNumber, time) {
                 y: Math.floor((Math.random() * 5000) + 1)
             });
             spawnMonster(monsta.getFlock() + 1, monsterlist_med[random_med]);
-            console.log("spawned_med" + monsta.getFlock() + 1);
+            console.log("spawned_med" + monsta.getFlock());
+            monsta = null;
+            //if(bar4Number % 8 === 0 && barNumber % 16) {
+            //    //spawnMonster(1, JellyOrange);
+            //    //spawnMonster(2, JellyGreen);
+            //    console.log("spawned shark");
+            //}
 
         }
 
-        if (bar4Number > 12) {
-            spawnMonster(1, Shark);
-        }
+
     }
 
     // Shark Shoot
     for (x in monsters) {
         var monster = monsters[x];
         if (monster.shooter === true && monster.isDead === false) {
-            if (monster.token === "shark") {
-                if (current16thNote === 4 || current16thNote === 12) {
-                    sharkShoot = true;
-                    //console.log("sharkshoot =" + sharkShoot);
-                    monster.shoot();
-                }
-            }
-            if (monster.token === "eel") {
-                if (barNumberL === 0 || barNumberL === 2) {
-                    if (current16thNote === 0 || current16thNote === 1 || current16thNote === 2 || current16thNote === 3 || current16thNote === 4 || current16thNote === 5) {
-                        eelShoot = true;
-                        monster.shoot();
-                    }
-                } else if (barNumberL === 1 || barNumberL === 3) {
-                    if (current16thNote === 0 || current16thNote === 2 || current16thNote === 3) {
-                        eelShoot = true;
-                        monster.shoot();
-                    }
-                }
+            window[monster.token] = true;
+            if (monster.shootRhythm()) {
+                monster.shoot();
             }
         }
+        //if (window[monster.token]){
+        //    if (monster.shootTiming()) {
+        //        window[monster.token] = false;
+        //        setTimeout(function () {
+        //            window[monster.token] = true;
+        //        }, 100);
+        //        playSound(samplebb[this.shootSound], gainNode3);
+        //    }
+        //}
     }
     if (sharkShoot === true) {
         if (current16thNote === 4 || current16thNote === 12) {
             playSound(samplebb[25], gainNode3);
-            //console.log("playsound" + sharkShoot);
         }
     }
-    if (eelShoot === true) {
+    if (bugShoot === true) {
         if (barNumber % 2 === 0 && current16thNote === 0) {
             playSound(samplebb[24], gainNode3);
-            //console.log("eelshoot" + eelShoot);
         }
     }
+    if (jellyShoot === true) {
+        if (bar4Number % 2 === 0 && current64thNote === 24) {
+            playSound(samplebb[18], gainNode2);
+        }
+    }
+    if (jellygreenShoot === true) {
+        if (barNumber % 4 === 0 && current16thNote === 0) {
+            playSound(samplebb[31], gainNode2);
+        }
+    }
+
 
     //if(sharkShoot){
     //    if (barNumber % 1 === 0) {
@@ -539,12 +640,9 @@ var spawnPlanet = function (amount, planett) {
 };
 
 
-
-
-
 var shoot = function () {
 
-    bullet = new Bullet(hero.x, hero.y, 60);
+    var bullet = new Bullet(hero.x, hero.y, 60);
 
     // Create a vector between the center of the player and the current mouse position..
     var vector = {x: (bulletX + camera.x) - (hero.x + 16), y: (bulletY + camera.y) - (hero.y + 16)};
@@ -558,38 +656,36 @@ var shoot = function () {
     bullets.push(bullet);
 };
 
-var shoot2 = function () {
-
-    bullet = new Bullet(hero.x, hero.y, 30);
-    bullet3 = new Bullet(hero.x, hero.y, 25);
-    bullet2 = new Bullet(hero.x, hero.y, 25);
-
-    // Create a vector between the center of the player and the current mouse position..
-    var vector = {x: (bullet.eX + camera.x) - (hero.x + 16), y: (bullet.eY + camera.y) - (hero.y + 16)};
-
-    // Use the Pythagorean theorem to discover the length of the vector...
-    vector.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-
-    // Set the velocity of the bullet to the components of the vector divided by it's length times the desired speed (10).
-    bullet.velocity = [(vector.x / vector.length) * 10, (vector.y / vector.length) * randomN(8, 10, 3)];
-    bullet3.velocity = [(vector.x / vector.length) * 10, (vector.y / vector.length) * randomN(9.5, 10.5, 3)];
-    bullet2.velocity = [(vector.x / vector.length) * 10, (vector.y / vector.length) * randomN(10, 11.5, 3)];
-    //bullet1.velocity, bullet2.velocity
-    bullet.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    bullet3.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    bullet2.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    //bullet1.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    //bullet2.angle = Math.atan2(vector.y  / vector.length, vector.x / vector.length);
-
-    //bullet.type = "bullet1";   // Active weapon.bullet
-    //bullet3.type = "bullet1";   // Active weapon.bullet
-    //bullet2.type = "bullet1";   // Active weapon.bullet
-
-    // Push the bullet into the bullets array.
-    bullets.push(bullet);
-    bullets.push(bullet3);
-    bullets.push(bullet2);
-};
+//var shoot2 = function () {
+//
+//    var bullet = new Bullet(hero.x, hero.y, 10);
+//    var bullet2 = new Bullet(hero.x, hero.y, 10);
+//    var bullet3 = new Bullet(hero.x, hero.y, 10);
+//
+//    // Create a vector between the center of the player and the current mouse position..
+//    var vector = {x: (bulletX + camera.x) - (hero.x + 16), y: (bulletY + camera.y) - (hero.y + 16)};
+//    var vector2 = {x: (bulletX + camera.x) - (hero.x + 16), y: (bulletY + camera.y) - (hero.y + 16)};
+//    var vector3 = {x: (bulletX + camera.x) - (hero.x + 16), y: (bulletY + camera.y) - (hero.y + 16)};
+//
+//    // Use the Pythagorean theorem to discover the length of the vector...
+//    vector.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+//    vector2.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+//    vector3.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+//
+//    // Set the velocity of the bullet to the components of the vector divided by it's length times the desired speed (10).
+//    bullet.velocity = [(vector.x / vector.length) * 10, (vector.y / vector.length) * 10];
+//    bullet2.velocity = [(vector2.x / vector2.length) * 10, (vector2.y / vector2.length) * 10];
+//    bullet3.velocity = [(vector3.x / vector3.length) * 10, (vector3.y / vector3.length) * 10];
+//
+//    //bullet.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
+//    //bullet2.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
+//    //bullet3.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
+//
+//    // Push the bullet into the bullets array.
+//    bullets.push(bullet);
+//    bullets.push(bullet2);
+//    bullets.push(bullet3);
+//};
 
 
 function map_range(value, low1, high1, low2, high2) {
@@ -610,37 +706,42 @@ var randomN = function (minimum, maximum, precision) {
 
 //var list = [
 //    function() { spawnMonster(5, Fish) },
-//    function() { spawnMonster(5,Worm) },
+//    function() { spawnMonster(5,Beetle) },
 //    function() { spawnMonster(5, Prawn) },
 //    function() {spawnMonster(3,Bug) },
 //    function() {spawnMonster(1, Shark) },
 //    function() {spawnMonster(5, Mosquito) },
 //    function() {spawnMonster(5, Mosquito2) }];
-var list = [Fish, Worm, Prawn, Bug, Shark, Mosquito, Mosquito2];
-var weight_easy = [0.35, 0.2, 0.2, 0.05, 0.05, 0.1, 0.05];
-var weight_med = [0.025, 0.025, 0.225, 0.3, 0.225, 0.15, 0.25];
+var list = [Fish, Beetle, Prawn, Bug, Shark, Mosquito, Mosquito2, JellyGreen, JellyOrange];
+var list2 = [Fish, Beetle, Prawn, Bug, Shark, JellyOrange, Mosquito, Mosquito2, JellyGreen, JellyOrange];
+var weight_easy = [0.35, 0.17, 0.2, 0.05, 0.05, 0.09, 0.05, 0.0, 0.04];
+var weight_med = [0.02, 0.03, 0.02, 0.18, 0.16, 0.26, 0.05, 0.08, 0.1, 0.1];
 //var weight_easy = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0];
 var monsterlist_easy = generateWeighedList(list, weight_easy);
-var monsterlist_med = generateWeighedList(list, weight_med);
+var monsterlist_med = generateWeighedList(list2, weight_med);
 
 
 function handleInput(dt) {
     var keys = {W: false, A: false, S: false, D: false, howManyPressed: 0};
 
-    if (87 in keysDown) { // Player holding up
-        keys.W = true;
+    if (87 in keysDown || 38 in keysDown) { // Player holding up
+        //keys.W = true;
+        keys.UP = true;
         keys.howManyPressed += 1;
     }
-    if (83 in keysDown) { // Player holding down
-        keys.S = true;
+    if (83 in keysDown || 40 in keysDown) { // Player holding down
+        //keys.S = true;
+        keys.DOWN = true;
         keys.howManyPressed += 1;
     }
-    if (65 in keysDown) { // Player holding left
-        keys.A = true;
+    if (65 in keysDown || 37 in keysDown) { // Player holding left
+        //keys.A = true;
+        keys.LEFT = true;
         keys.howManyPressed += 1;
     }
-    if (68 in keysDown) { // Player holding right
-        keys.D = true;
+    if (68 in keysDown || 39 in keysDown) { // Player holding right
+        //keys.D = true;
+        keys.RIGHT = true;
         keys.howManyPressed += 1;
     }
     if (27 in keysDown) {
@@ -649,13 +750,13 @@ function handleInput(dt) {
     }
 
     if (90 in keysDown) {
-        spawnMonster(1, Fish);
+        spawnMonster(1, JellyOrange);
     }
     if (88 in keysDown) {
-        spawnMonster(1, Worm);
+        spawnMonster(1, JellyGreen);
     }
     if (67 in keysDown) {
-        spawnMonster(1, Prawn);
+        spawnMonster(1, Beetle);
     }
     if (86 in keysDown) {
         spawnMonster(1, Bug);
@@ -664,7 +765,7 @@ function handleInput(dt) {
         spawnMonster(1, Shark);
     }
     if (78 in keysDown) {
-        spawnMonster(1, Mosquito);
+        spawnMonster(1, Mosquito2);
     }
     if (191 in keysDown) {
         console.log(monsters.length);
@@ -676,18 +777,22 @@ function handleInput(dt) {
     }
 
     //if(isInXrange(hero.x) && isInYrange(hero.y)){
-    if (keys.W === true && hero.y >= 0) {
+    if (keys.UP === true && hero.y >= 0) {
         hero.y -= hero.speed * dt;
+        //hero.velY--;
     }
     //}
-    if (keys.S === true && hero.y <= 5000) {
+    if (keys.DOWN === true && hero.y <= 5000) {
         hero.y += hero.speed * dt;
+        //hero.velY++;
     }
-    if (keys.A === true && hero.x >= 0) {
+    if (keys.LEFT === true && hero.x >= 0) {
         hero.x -= hero.speed * dt;
+        //hero.velX--;
     }
-    if (keys.D === true && hero.x <= 5000) {
+    if (keys.RIGHT === true && hero.x <= 5000) {
         hero.x += hero.speed * dt;
+        //hero.velX++;
     }
 
     if (keys.howManyPressed >= 2) {
@@ -723,9 +828,10 @@ function updateEntities(dt) {
 
     for (var x in planets) {
         var planet = planets[x];
-        //planet.update();
+        planet.update();
         planet.playLoop();
         //planet.render();
+        //collide(hero, planet, true);
         collide(hero, planet, true);
 
         for (var x in monsters) {
@@ -807,7 +913,7 @@ function updateEntities(dt) {
         var bullet = bullets[z];
         bullet.update();
 
-            }
+    }
 
     //        var playerdist = {x: bullet.x - hero.x, y: bullet.y - hero.y};
     //        playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
@@ -829,8 +935,8 @@ function cameraFollow() {
     followplayer.length = Math.sqrt((followplayer.x * followplayer.x) + (followplayer.y * followplayer.y));
     if (followplayer.length > 60)   //   ***
     {
-        camera.x -= (followplayer.x / followplayer.length) * 4;  //  (choppy*?)
-        camera.y -= (followplayer.y / followplayer.length) * 4;  //  (choppy*?)
+        camera.x -= (followplayer.x / followplayer.length) * 5;  //  (choppy*?)
+        camera.y -= (followplayer.y / followplayer.length) * 5;  //  (choppy*?)
     }
 
     //
@@ -919,7 +1025,6 @@ var collide = function (obj1, obj2, separate, callback, type) {
     //    bullet.y + hero.height / 2 < hero.y
     //) {
 
-
     if (colliding === true && separate === true) {
 
         var penetration = {x: obj1.x - obj2.x, y: obj1.y - obj2.y};
@@ -940,6 +1045,37 @@ var collide = function (obj1, obj2, separate, callback, type) {
 };
 
 
+function circleCollide(c, r) {
+    var rHalfWidth = r.width / 2,
+        rHalfHeight = r.height / 2,
+        cx = Math.abs(c.xCenter() - r.x - rHalfWidth),
+        cy, distX, distY, distXSq, distYSq, maxDist;
+
+    if (cx > rHalfWidth + c.radius) {
+        return false;
+    }
+
+    cy = Math.abs(c.yCenter() - r.y - rHalfHeight);
+
+    if (cy > rHalfHeight + c.radius) {
+        return false;
+    }
+
+    if (cx <= rHalfWidth || cy <= rHalfHeight) {
+        return true;
+    }
+
+    distX = cx - rHalfWidth;
+    distY = cy - rHalfHeight;
+    distXSq = distX * distX;
+    distYSq = distY * distY;
+    maxDist = c.radius * c.radius;
+
+
+    return distXSq + distYSq <= maxDist;
+}
+
+
 function updateStates() {
 
     if (hero.health <= 0) {
@@ -957,7 +1093,7 @@ function updateStates() {
 
 }
 
-var reset = function() {
+var reset = function () {
 
     //var executed = false;
     //return function () {
@@ -968,60 +1104,87 @@ var reset = function() {
     //    }
     //};
 
-    if(!gameOver) {
+    if (!gameOver) {
         gameOver = true;
-        playSound(samplebb[27],gainNode3);
+        playSound(samplebb[4], gainNode3);
 
         setTimeout(initStats, 6000);
 
     }
 
 
-
 };
 
-function initStats(){
+function initStats() {
 
 
-        //location.reload(true);   // Refresh
+    //location.reload(true);   // Refresh
 
 
-        //play();
-        //setTimeout(play, 8000);
+    play();
+    setTimeout(play, 8000);
 
-        gameOver = false;
-        tempo = 145;
-        score = 0;
-        monsters = [];
-        planets = [];
-        bullets = [];
-        //spawnN = 0;
-        hero.x = 3000;
-        hero.y = 3000;
-        camera.x = hero.x - canvas.width / 2;
-        camera.y = hero.y - canvas.width / 2;
-        hero.health = 1000;
+    gameOver = false;
+    tempo = 145;
+    score = 0;
+    monsters = [];
+    planets = [];
+    bullets = [];
+    //spawnN = 0;
+    hero.x = 3000;
+    hero.y = 3000;
+    camera.x = hero.x - canvas.width / 2;
+    camera.y = hero.y - canvas.width / 2;
+    hero.health = 2000;
 
-        sharkShoot = false;
-        eelShoot = false;
+    sharkShoot = false;
+    bugShoot = false;
+    jellyShoot = false;
 
-        planet1play = true;
+    planet1play = true;
+    planet2play = true;
+    planet3play = true;
+    planet4play = true;
+    planet5play = true;
+    planet6play = true;
+    planet7play = true;
+    planet8play = true;
+    planet9play = true;
 
-        planet1gain.gain.value = 0.0;
-
-        bulletpiercePower = false;
-
-        gun = 0;
-        current16thNote = 0;
-        current32thNote = 0;
-        barNumber = 0;
-        barNumberL = 0;
-        bar4Number = 0;
-        bar16Number = 0;
-        gameTime = 0;
+    planet1gain.gain.value = 0.0;
+    planet2gain.gain.value = 0.0;
+    planet3gain.gain.value = 0.0;
+    planet4gain.gain.value = 0.0;
+    planet5gain.gain.value = 0.0;
+    planet6gain.gain.value = 0.0;
+    planet7gain.gain.value = 0.0;
+    planet8gain.gain.value = 0.0;
+    planet9gain.gain.value = 0.0;
 
 
-        spawnPlanet(1, PlanetMars);
+    bulletpiercePower = false;
+
+    gun = 0;
+    current16thNote = 0;
+    current64thNote = 0;
+    barNumber = 0;
+    barNumberL = 0;
+    bar4Number = 0;
+    bar16Number = 0;
+    gameTime = 0;
+
+
+    spawnPlanet(1, PlanetMars);
+    spawnPlanet(1, PlanetBlue1);
+    spawnPlanet(1, PlanetBlue2);
+    spawnPlanet(1, PlanetPinkMosaic);
+    spawnPlanet(1, PlanetFlute);
+    spawnPlanet(1, PlanetCoconut);
+    spawnPlanet(1, PlanetBreakbeat);
+    spawnPlanet(1, PlanetWarble);
+    spawnPlanet(1, PlanetPlink);
+    spawnPlanet(1, PlanetFlange);
+    spawnPlanet(1, PlanetBlobby);
 
 
 
@@ -1039,11 +1202,13 @@ var render = function () {
     ctx.translate(-camera.x, -camera.y);
 
 
-    ctx.drawImage(resources.get("images/Hero.png"), hero.x, hero.y, hero.width, hero.height);
+    //ctx.drawImage((resources.get("images/background1.jpg")),0,0);
+
 
     for (var x in planets) {
         var planet = planets[x];
         planet.render(ctx);
+        //ctx.scale(0.5,0.5);
 
     }
 
@@ -1053,6 +1218,7 @@ var render = function () {
         monster.render(ctx);
     }
 
+    ctx.drawImage(resources.get("images/Hero.png"), hero.x, hero.y, hero.width, hero.height);
 
 
     // Draw bullets...
@@ -1091,6 +1257,7 @@ var render = function () {
     ctx.textAlign = "left";
     //ctx.textBaseline = "top";
     ctx.fillText("Space Cash: " + score + "   " + "Space Health: " + hero.health, 32, 32);
+    //ctx.fillText("Space Cash: " + score + "   " + "Space Health: " + hero.health + "planet1gain - " + planet1gain.gain.value + "  - jellyshoot" + jellyShoot , 32, 32);
     //ctx.fillText("DT: " + dt, 50, 50);
 
 
@@ -1136,3 +1303,5 @@ function update(dt) {
     //var shark = new Shark({x:2000,y:2000});
     //console.log(shark.health);
 }
+
+
