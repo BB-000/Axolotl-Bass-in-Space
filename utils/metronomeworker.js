@@ -27,7 +27,7 @@
 
 
 var timerID = null;
-var interval = 250;
+var interval = 200;
 
 function tickBack() {           // share callback for timer
     postMessage("tick");

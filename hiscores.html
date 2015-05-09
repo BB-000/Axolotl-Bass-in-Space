@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>High Score</title>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="json2.js"></script>
+    <script>
+        var arrHighScores = []; // create Global array
+        // Fill sample data, just to get started
+        //arrHighScores.push( new objScore('easy', '2', '30') );
+        //arrHighScores.push( new objScore('easy', '5', '75') );
+        //console.log(arrHighScores);
+        function objScore(difficulty, tries, seconds){
+            this.difficulty = difficulty;
+            this.tries = tries;
+            this.seconds = seconds
+        };
+        function SetHighScores() {
+            var myJsonString = JSON.stringify(arrHighScores);
+            localStorage.HighScores = myJsonString;
+        }
+        function RetrieveHighScores() {
+// store in a local variable, incase null
+            var RawData = localStorage.HighScores;
+// only process if not null
+            if (RawData != null) {
+                var HighScoresStored = JSON.parse(RawData);
+                arrHighScores = []; // reset
+                $.each(HighScoresStored, function(i, obj) {
+                    arrHighScores.push( new objScore(obj.difficulty, obj.tries ,obj.seconds) );
+                });
+            }
+        }
+        function AddHighScore() {
+// Get the current list
+            RetrieveHighScores();
+// Add new entry
+            var Difficulty = $('#difficulty').val();
+            var Tries = $('#tries').val();
+            var Seconds = $('#seconds').val();
+            arrHighScores.push( new objScore(Difficulty, Tries, Seconds) );
+            console.log(arrHighScores);
+// Only store the top scores:
+// Sort the array
+            arrHighScores.sort(function(a,b){return a.tries-b.tries});
+// Optional: only store the "top 10" - not shown
+// Save it
+            SetHighScores();
+// Print out the new High Score list
+            ShowHighScoreValues();
+        }
+        function ShowHighScoreValues() {
+            RetrieveHighScores();
+            $('#array_contents').html('High Scores:');
+            $.each(arrHighScores, function(i, obj) {
+                $('#array_contents').append('<br/>' + obj.difficulty + ' - ' + obj.tries + ' -- ' + obj.seconds);
+            });
+        }
+        function ClearLocalStorage() {
+            localStorage.clear();
+            arrHighScores = []; // reset incase the page isn't refreshed
+        }
+    </script>
+</head>
+<body>
+<h1>Javascript High Score Demonstration</h1>
+<h2>(Arrays, Objects, JSON, HTML 5 local storage)</h2>
+<input type="button" value="Show High Scores" onclick="ShowHighScoreValues();" />
+<input type="button" value="Clear" onclick="ClearLocalStorage();" />
+<hr>
+Add New Item to Array:
+<br />Difficulty: <input type="text" name="difficulty" id="difficulty" value="easy" />
+<br />Tries: <input type="text" name="tries" id="tries" value="3" />
+<br />Seconds: <input type="text" name="seconds" id="seconds" value="45" />
+<br /><input type="button" value="Add" onclick="AddHighScore();" />
+<div id="array_contents"></div>
+</body>
+</html>

@@ -5,18 +5,22 @@ var sharkShoot = false;
 var bugShoot = false;
 var jellyShoot = false;
 var jellygreenShoot = false;
+var wizardShoot = false;
+var wizardgreenShoot = false;
+var jellypurpleShoot = false;
+var masterblasterShoot = false;
 
-var planet1play = true;
-var planet2play = true;
-var planet3play = true;
-var planet4play = true;
-var planet5play = true;
-var planet6play = true;
-var planet7play = true;
-var planet8play = true;
-var planet9play = true;
-var planet10play = true;
-var planet11play = true;
+//var planet1play = true;
+//var planet2play = true;
+//var planet3play = true;
+//var planet4play = true;
+//var planet5play = true;
+//var planet6play = true;
+//var planet7play = true;
+//var planet8play = true;
+//var planet9play = true;
+//var planet10play = true;
+//var planet11play = true;
 
 var fishPlay = false;
 var sharkPlay = false;
@@ -29,6 +33,12 @@ var jellyorangePlay = false;
 var jellygreenPlay = false;
 var boulderPlay = false;
 var healthUpPlay = false;
+var gunUpPlay = false;
+var slowPotionPlay = false;
+var wizardPlay = false;
+var wizardgreenPlay = false;
+var jellypurplePlay = false;
+var masterblasterPlay = false;
 
 //function PowerUp() {}
 //PowerUp.prototype = {
@@ -37,16 +47,16 @@ var healthUpPlay = false;
 //
 //}
 
-function Monster() {
+function Npc() {
 }
-Monster.prototype = {
+Npc.prototype = {
 
     isDead: false,
     playing: false,
     barTiming: 1,
     follow: true,
     toRemove: false,
-    channel: gainNode3,
+    channel: gainNode3D,
     fx: "delay",
     shooter: false,
     barbulletTiming: 1,
@@ -75,10 +85,11 @@ Monster.prototype = {
                 }
             }
 
-            collide(hero, this, true, function (collides) {
+            collide(this, hero, true, function (collides) {
                 if (collides === true) {
                     hero.health -= that.damage;
                     that.isDead = true;
+                    xhealth.innerHTML = ("Space Health: " + hero.health);
                     //console.log("damage"+this.damage);
                     //console.log(collides);
                 }
@@ -90,54 +101,42 @@ Monster.prototype = {
             if (window[this.flag] === false) {
                 //window[this.flag] = true;
                 //console.log(window[this.flag]);
-                if (barNumber % this.barTiming === 0) {
-                    if (current16thNote % this.timing === 0) {
-                        this.toRemove = true;
+                //if (barNumber % this.barTiming === 0) {
+                //    if (current16thNote % this.timing === 0) {
+                if (this.timing()) {
+                    this.toRemove = true;
 
-                        if (this.isPowerUp) {
-                            this.powerUp();
+                    if (this.isPowerUp) {
+                        this.powerUp();
+                        //document.getElementById("xpowerup").innerHtml = powerupText;
+                    }
+                    if (gameOver === false) {
+                        score += this.points;
+                        xscore.innerHTML = ("Space Cash: " + score);
+                        window[this.flag] = true;
+                        if (this.isPowerDrop) {
+                            var power = new HealthUp(this.x, this.y);
+                            monsters.push(power);
                         }
-                        //samplebb[this.sound].ready = false;
-                        //if (this.Powerdrop) {
-                        //    var powerup = new HealthPower();
-                        //    powers.push(powerup);
-                        //}
-                        if (gameOver === false) {
-                            score += this.points;
-                            window[this.flag] = true;
-                            if (this.isPowerDrop) {
-                                var power = new HealthUp(this.x, this.y);
-                                monsters.push(power);
-                            }
-                            //console.log("" + fishPlay);
-                            setTimeout(function () {
-                                window[that.flag] = false;
-                            }, 100);
-                            //console.log(fishPlay);
-                            //this.resetToken();
-                            //console.log(fishPlay);
-                            if (this.fx === "delay") {
-                                playSoundDelay(samplebb[this.sound], this.channel);
-                            } else {
-                                playSound(samplebb[this.sound], this.channel);
-                            }
+                        //console.log("" + fishPlay);
+                        setTimeout(function () {
+                            window[that.flag] = false;
+                        }, 200);
+                        //console.log(fishPlay);
+                        //this.resetToken();
+                        //console.log(fishPlay);
+                        if (this.fx === "delay") {
+                            playSoundDelay(samplebb[this.sound], this.channel);
+                        } else {
+                            playSound(samplebb[this.sound], this.channel);
                         }
                     }
                 }
+
             }
 
             if (this.shooter) {
-                //this.playing = false;
-
                 window[this.token] = false;
-
-                //if (this.token === "shark") {
-                //    sharkShoot = false;
-                //}
-                //else if (this.token === "eel") {
-                //    eelShoot = false;
-                //    //console.log(eelShoot + "eelshoot false/?");
-                //}
             }
         }
 
@@ -180,6 +179,12 @@ Monster.prototype = {
 
     render: function (ctx) {
         if (this.isDead === false) {
+            //ctx.imageSmoothingEnabled = false;
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
+            //ctx.webkitimageSmoothingEnabled = false;
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
         } else if (this.isDead === true) {
             ctx.save();
@@ -230,7 +235,7 @@ Monster.prototype = {
 };
 
 //function MonsterMove() {}
-//MonsterMove.prototype = Object.create(Monster.prototype);
+//MonsterMove.prototype = Object.create(Npc.prototype);
 //MonsterMove.prototype.move = function () {
 //    if (this.health >= 0) {
 //        // Vector between the monster and the player
@@ -252,10 +257,10 @@ Monster.prototype = {
 //    }
 //};
 
-function MonsterMove2() {
+function MonsterChase() {
 }
-MonsterMove2.prototype = Object.create(Monster.prototype);
-MonsterMove2.prototype.move = function (dt) {
+MonsterChase.prototype = Object.create(Npc.prototype);
+MonsterChase.prototype.move = function (dt) {
 
     //var monstervector = {
     //    x: Math.round(this.x - hero.x),
@@ -263,6 +268,7 @@ MonsterMove2.prototype.move = function (dt) {
     //};
     //monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
 
+    this.friction = 0.9;
     //console.log(monstervector.length);
     this.UpdateAngle = function () {
         this.dx = hero.x - this.x;
@@ -273,25 +279,31 @@ MonsterMove2.prototype.move = function (dt) {
     this.UpdateSpeed = function () {
         this.speedX = this.speed * (this.dx / this.distance);
         this.speedY = this.speed * (this.dy / this.distance);
+        this.speedY *= this.friction;
+        //this.y += this.speedY;
+        this.speedX *= this.friction;
+        //this.x += this.speedX;
     };
     this.move = function () {
         this.UpdateAngle();
         this.UpdateSpeed();
-        this.x += this.speedX * dt;
-        this.y += this.speedY * dt;
+        this.x += this.speedX * dt * speedMod;
+        this.y += this.speedY * dt * speedMod;
     };
+
+
 };
 
 function MonsterRun() {
 }
-MonsterRun.prototype = Object.create(Monster.prototype);
+MonsterRun.prototype = Object.create(Npc.prototype);
 MonsterRun.prototype.move = function (dt) {
 
-    var monstervector = {
-        x: Math.round(this.x - hero.x),
-        y: Math.round(this.y - hero.y)
-    };
-    monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
+    //var monstervector = {
+    //    x: Math.round(this.x - hero.x),
+    //    y: Math.round(this.y - hero.y)
+    //};
+    //monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
     //console.log(monstervector.length);
 
     this.UpdateAngle = function () {
@@ -307,16 +319,15 @@ MonsterRun.prototype.move = function (dt) {
     this.move = function () {
         this.UpdateAngle();
         this.UpdateSpeed();
-        var monstervector = {
-            x: Math.round(this.x - hero.x),
-            y: Math.round(this.y - hero.y)
-        };
+        var monstervector = {x: Math.round(this.x - hero.x), y: Math.round(this.y - hero.y)};
         monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
-
-        if (monstervector.length < 800 && this.x > 0 && this.y > 0 && this.x < 5000 && this.y < 5000) {
+        if (monstervector.length < 200 && this.x > 0 && this.y > 0 && this.x < 5000 && this.y < 5000) {
             this.x -= this.speedX * dt;
             this.y -= this.speedY * dt;
-        } else if (monstervector.length > 800) {
+        } else if (monstervector.length > 200 && monstervector.length < 600 && this.x > 0 && this.y > 0 && this.x < 5000 && this.y < 5000) {
+            this.x -= (this.speedX / 2) * dt;
+            this.y -= (this.speedY / 2) * dt;
+        } else if (monstervector.length > 600) {
             this.x += this.speedX * dt;
             this.y += this.speedY * dt;
         }
@@ -326,20 +337,25 @@ MonsterRun.prototype.move = function (dt) {
 
 function MonsterShoot() {
 }
-MonsterShoot.prototype = Object.create(MonsterMove2.prototype);
+MonsterShoot.prototype = Object.create(MonsterChase.prototype);
 MonsterShoot.prototype.shoot = function () {
 
     //var playerdist = {x: this.x - (hero.x + 20), y: this.y - (hero.y + 20)};
     //playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
 
     //if (this.shooter === true) {
+    var monstervector = {x: Math.round(this.x - hero.x), y: Math.round(this.y - hero.y)};
+    monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
 
-    var bullet = new Bullet(this.x + 16, this.y + 16, this.bbDamage, this.bbType);
-    var vector = {x: hero.x - this.x, y: hero.y - this.y};
-    vector.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-    bullet.velocity = [(vector.x / vector.length) * this.bbspeed, (vector.y / vector.length) * this.bbspeed];
-    bullet.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    bullets.push(bullet);
+    if (monstervector.length < 1000) {
+        var bullet = new Bullet(this.x + this.width / 2, this.y + this.height / 2, this.bbDamage, this.bbType);
+        var vector = {x: hero.x - this.x, y: hero.y - this.y};
+        vector.length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+        bullet.velocity = [(vector.x / vector.length) * this.bbspeed, (vector.y / vector.length) * this.bbspeed];
+        bullet.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
+        bullets.push(bullet);
+        //console.log("shot!!");
+    }
 
     //this.playing = true;
 
@@ -347,27 +363,29 @@ MonsterShoot.prototype.shoot = function () {
 };
 
 
+
+
 function MonsterFly() {
 }
-MonsterFly.prototype = Object.create(Monster.prototype);
+MonsterFly.prototype = Object.create(Npc.prototype);
 MonsterFly.prototype.move = function (dt) {
 
-    this.speedX = this.speed * 6 + dt;
-    this.speedY = this.speed * 2;
+    this.speedX = this.speed * 6 * speedMod;
+    this.speedY = this.speed * 2 * speedMod;
     this.x += this.speedX;
     this.y += this.speedY;
 
     var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
     playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
 
-    if (playerdist.length > 6500) {
+    if (playerdist.length > 6000) {
         //var index = monsters.indexOf(this);
         this.toRemove = true;
         //monsters.splice(index, 1);
     }
 };
 
-//Prawn.prototype = Object.create(Monster.prototype);
+//Prawn.prototype = Object.create(Npc.prototype);
 
 var Fish = function (position) {
 
@@ -376,7 +394,7 @@ var Fish = function (position) {
     this.width = 32;
     this.height = 32;
     this.health = 20;
-    this.damage = 50;
+    this.damage = 100;
     this.points = 50;
     this.speed = Math.random() * (190 - 70) + 70;
     this.sizex = 32;
@@ -389,13 +407,17 @@ var Fish = function (position) {
     //?
     this.sound = Math.floor((Math.random() * 2) + 19);
     //this.shootSound = 0;
-    this.timing = 4;
+    //this.timing = 4;
+    this.timing = function () {
+        return !!current16thNote % 4 === 0;
+    }
     this.flockSize = 5;
     this.flag = "fishPlay";
     //this.resolution = bar4Number;
+    this.channel = gainNode3E;
 
 };
-Fish.prototype = Object.create(MonsterMove2.prototype);
+Fish.prototype = Object.create(MonsterChase.prototype);
 
 var Beetle = function (position) {
     this.x = position.x;
@@ -412,12 +434,15 @@ var Beetle = function (position) {
     this.monsterImage = "images/BeetleBlue.png";
     this.sound = 17;
     this.timing = 16;
+    this.timing = function () {
+        return !!(current16thNote % 16 === 0);
+    }
     this.flag = "wormPlay";
     this.flockSize = 3;
 
 
 };
-Beetle.prototype = Object.create(MonsterMove2.prototype);
+Beetle.prototype = Object.create(MonsterChase.prototype);
 
 
 var Prawn = function (position) {
@@ -434,14 +459,19 @@ var Prawn = function (position) {
     this.sizey = 32;
     //this.monsterImage = new Image();
     this.monsterImage = "images/Prawn.png";
-    this.sound = 7;
-    this.timing = 3;
-    this.flockSize = 4;
+    this.sound = 83;
+    //this.timing = 3;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.flockSize = 3;
     this.flag = "prawnPlay";
+    this.fx = "none";
+    this.channel = gainNode3B;
 
 
 };
-Prawn.prototype = Object.create(MonsterMove2.prototype);
+Prawn.prototype = Object.create(MonsterChase.prototype);
 
 
 var Bug = function (position) {
@@ -452,23 +482,26 @@ var Bug = function (position) {
     this.y = position.y;
     this.width = xx;
     this.height = xx;
-    this.health = Math.floor(Math.random() * (125 - 50 + 1) + 50);
+    this.health = Math.floor(Math.random() * (160 - 50 + 1) + 50);
     this.damage = 100;
     this.points = 400;
     this.speed = Math.floor(Math.random() * (180 - 100 + 1) + 100);
     this.sizex = xx;
     this.sizey = xx;
     //this.monsterImage = new Image();
-    this.monsterImage = "images/Bug.png";
-    this.sound = Math.floor(Math.random() * (6 - 5) + 1) + 5;
+    this.monsterImage = "images/PrawnYellow.png";
+    this.sound = rand(5, 7);
     this.shootSound = 24;
 
-    this.timing = 1;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    }
     //this.token = "eel";
     this.name = "bug";
     this.shooter = true;
     this.bbspeed = 5;
-    this.bbDamage = 15;
+    this.bbDamage = 25;
     this.bbType = "enemy2";
     this.flockSize = 4;
     this.flag = "bugPlay";
@@ -500,7 +533,7 @@ var Shark = function (position) {
     this.y = position.y;
     this.width = 64;
     this.height = 64;
-    this.health = 1500;
+    this.health = 1900;
     this.damage = 300;
     this.points = 1500;
     this.speed = Math.random() * (120 - 50) + 50;
@@ -513,10 +546,12 @@ var Shark = function (position) {
     this.name = "shark";
     this.sound = 14;
     this.shootSound = 25;
-    this.timing = 16;
-    this.barTiming = 4;
-    this.bbspeed = 9;
-    this.bbDamage = 40;
+    //this.timing = 16;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.bbspeed = 8;
+    this.bbDamage = 50;
     this.bbType = "enemy1";
     this.flockSize = 1;
     this.flag = "sharkPlay";
@@ -538,22 +573,24 @@ var JellyOrange = function (position) {
     this.width = 40;
     this.height = 24;
     this.health = 1000;
-    this.damage = 200;
+    this.damage = 300;
     this.points = 1000;
     this.speed = Math.random() * (60 - 10) + 10;
     this.sizex = 40;
     this.sizey = 42;
     this.shooter = true;
-    this.bbspeed = 5;
     this.monsterImage = "images/JellyOrange.png";
     this.token = "jellyShoot";
     this.sound = 30;
-    this.timing = 16;
-    this.barTiming = 4;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
     this.bbspeed = 6;
-    this.bbDamage = 30;
+    this.bbDamage = 25;
     this.bbType = "enemy2";
-    this.flockSize = 1;
+    this.flockSize = 2;
     this.flag = "jellyorangePlay";
     this.channel = gainNode5;
     this.shootRhythm = function () {
@@ -572,26 +609,28 @@ var Mosquito = function (position) {
 
     this.x = position.x;
     this.y = position.y;
-    this.width = 32;
-    this.height = 32;
-    this.health = 70;
-    this.damage = 100;
+    this.width = 16;
+    this.height = 16;
+    this.health = 50;
+    this.damage = 50;
     this.points = 100;
-    this.speed = Math.random() * (260 - 220) + 220;
-    this.sizex = 32;
-    this.sizey = 32;
+    this.speed = rand(220, 280);
+    this.sizex = 16;
+    this.sizey = 16;
     //this.monsterImage = new Image();
     this.monsterImage = "images/Mosquito.png";
 
-    this.timing = 1;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    }
     this.sound = 13;
     this.flag = "mosquitoPlay";
-    this.flockSize = 5;
-
+    this.flockSize = 6;
 
 
 };
-Mosquito.prototype = Object.create(MonsterMove2.prototype);
+Mosquito.prototype = Object.create(MonsterChase.prototype);
 
 
 var Mosquito2 = function (position) {
@@ -600,26 +639,28 @@ var Mosquito2 = function (position) {
 
     this.x = position.x;
     this.y = position.y;
-    this.width = 20;
-    this.height = 20;
+    this.width = 32;
+    this.height = 32;
     this.health = 80;
-    this.damage = 100;
-    this.points = 70;
-    this.speed = Math.random() * (290 - 260) + 260;
+    this.damage = 80;
+    this.points = 100;
+    this.speed = rand(250, 270);
     this.sizex = 32;
     this.sizey = 32;
-    this.flockSize = 6;
     //this.monsterImage = new Image();
     this.monsterImage = "images/Mosquito2.png";
-
-    this.timing = 1;
-    this.sound = 13;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!current16thNote % 2 === 0;
+    };
+    this.sound = rand(76, 77);
     this.flag = "mosquito2Play";
-    this.flockSize = 5;
+    this.flockSize = 4;
+    this.channel = gainNode3E;
 
 
 };
-Mosquito2.prototype = Object.create(MonsterMove2.prototype);
+Mosquito2.prototype = Object.create(MonsterChase.prototype);
 
 
 var JellyGreen = function (position) {
@@ -635,16 +676,18 @@ var JellyGreen = function (position) {
     this.sizex = 50;
     this.sizey = 47;
     this.shooter = true;
-    this.bbspeed = 9;
     this.monsterImage = "images/JellyGreen.png";
     this.token = "jellygreenShoot";
-    this.sound = 30;
-    this.timing = 16;
-    this.barTiming = 4;
-    this.bbspeed = 6;
-    this.bbDamage = 30;
+    this.sound = 70;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.bbspeed = 9;
+    this.bbDamage = 50;
     this.bbType = "enemy1";
-    this.flockSize = 3;
+    this.flockSize = 1;
     this.flag = "jellygreenPlay";
     this.channel = gainNode5;
     this.isPowerDrop = true;
@@ -656,15 +699,158 @@ var JellyGreen = function (position) {
 JellyGreen.prototype = Object.create(MonsterShoot.prototype);
 
 
+var JellyPurple = function (position) {
+
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 50;
+    this.height = 34;
+    this.health = 650;
+    this.damage = 180;
+    this.points = 1000;
+    this.speed = rand(120, 200);
+    this.sizex = 50;
+    this.sizey = 47;
+    this.shooter = true;
+    this.monsterImage = "images/JellyPurple.png";
+    this.token = "jellypurpleShoot";
+    this.sound = 75;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!current16thNote % 16 === 0;
+    }
+    this.bbspeed = 6;
+    this.bbDamage = 30;
+    this.bbType = "enemy1";
+    this.flockSize = 5;
+    this.flag = "jellypurplePlay";
+    this.channel = gainNode3D;
+
+    this.shootRhythm = function () {
+        return !!((barNumberL === 0 || barNumberL === 1) && (current64thNote < 32 && current64thNote % 4 === 0));
+    };
+};
+JellyPurple.prototype = Object.create(MonsterShoot.prototype);
+
+
+var Wizard = function (position) {
+
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 28;
+    this.height = 88;
+    this.health = 2000;
+    this.damage = 200;
+    this.points = 1500;
+    this.speed = rand(50,150);
+    this.sizex = 28;
+    this.sizey = 88;
+    this.shooter = true;
+    this.monsterImage = "images/Wizard.png";
+    this.token = "wizardShoot";
+    this.sound = 69;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.bbspeed = 6;
+    this.bbDamage = 50;
+    this.bbType = "enemy1";
+    this.flockSize = 2;
+    this.flag = "wizardPlay";
+    this.channel = gainNode5;
+    this.filter = true;
+
+    this.shootRhythm = function () {
+        return !!((barNumberL === 0 || barNumberL === 1) && current16thNote <= 4);
+    };
+};
+Wizard.prototype = Object.create(MonsterShoot.prototype);
+
+
+var WizardGreen = function (position) {
+
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 56;
+    this.height = 196;
+    this.health = 5000;
+    this.damage = 200;
+    this.points = 6000;
+    this.speed = rand(30,50);
+    this.sizex = 56;
+    this.sizey = 196;
+    this.shooter = true;
+    this.monsterImage = "images/WizardGreen.png";
+    this.token = "wizardgreenShoot";
+    this.sound = 85;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.bbspeed = 9;
+    this.bbDamage = 50;
+    this.bbType = "enemy2";
+    this.flockSize = 1;
+    this.fx = "none";
+    this.flag = "wizardgreenPlay";
+    this.channel = gainNode3B;
+    this.isPowerDrop = true;
+
+    this.shootRhythm = function () {
+        return !!((bar4Number % 4 === 0) && (barNumberL === 0 || barNumberL === 1));
+    };
+};
+WizardGreen.prototype = Object.create(MonsterShoot.prototype);
+
+
+var MasterBlaster = function (position) {
+
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 64;
+    this.height = 64;
+    this.health = 4500;
+    this.damage = 200;
+    this.points = 5000;
+    this.speed = rand(50, 120);
+    this.sizex = 64;
+    this.sizey = 64;
+    this.shooter = true;
+    this.bbspeed = 9;
+    this.monsterImage = "images/MasterBlaster.png";
+    this.token = "masterblasterShoot";
+    this.sound = 84;
+    //this.timing = 16;
+    //this.barTiming = 4;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.bbspeed = 4;
+    this.bbDamage = 25;
+    this.bbType = "enemy2";
+    this.flockSize = 2;
+    this.flag = "masterblasterPlay";
+    this.channel = gainNode5;
+    this.shootRhythm = function () {
+        return !!((bar4Number % 4 === 0) && (barNumberL === 0 || barNumberL === 1));
+    };
+};
+MasterBlaster.prototype = Object.create(MonsterShoot.prototype);
+
+
 var Boulder = function (position) {
 
-    var xx = Math.random() * (86 - 16) + 16;
+    var xx = Math.random() * (112 - 16) + 16;
     this.x = position.x;
     this.y = position.y;
     this.width = xx;
     this.height = xx;
     this.health = 40;
-    this.damage = 2;
+    this.damage = 20;
     this.points = 1;
     this.speed = Math.random() * (4 - 1) + 1;
     //this.speed = 200;
@@ -672,17 +858,16 @@ var Boulder = function (position) {
     this.sizey = xx;
     //this.monsterImage = new Image();
     this.monsterImage = "images/Boulder.png";
-
-    this.timing = 1;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    };
     this.sound = 8;
     this.flag = "boulderPlay";
-
-
 };
 Boulder.prototype = Object.create(MonsterFly.prototype);
 
 //var monsterz = [Fish, Beetle, Prawn, Bug, Shark, Mosquito];
-
 
 function Planet() {
 }
@@ -694,32 +879,29 @@ Planet.prototype = {
     dieSound: 18,
     maxGain: 0.17,
     midGain: 0.05,
-    health: 15000,
+    health: 10000,
     radius: 64,
     points: 50000,
     height: 128,
     width: 128,
-    sizex: 128,
-    sizey: 128,
     planetDice: false,
+    loop: true,
 
     //xcenter: this.x + (this.width / 2),
     //ycenter: this.y + (this.height / 2),
-
 
     update: function () {
 
         if (this.health <= 0) {
             this.isDead = true;
             window[this.token] = false;
-            //console.log("planet1 :  " + planet1play + "  " + "planet2 :  " + planet2play + "  " + "planet3 :  " + planet3play + "  ");
         }
-
 
         if (this.isDead) {
             if (barNumber % this.timing === 0) {
                 if (current16thNote === 0) {
                     score += this.points;
+                    xscore.innerHTML = ("Space Cash: " + score);
                     var index = planets.indexOf(this);
                     planets.splice(index, 1);
                     playSound(samplebb[this.dieSound], this.channel);
@@ -730,11 +912,11 @@ Planet.prototype = {
 
     render: function (ctx) {
         if (this.isDead === false) {
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
         } else if (this.isDead === true) {
             ctx.save();
             ctx.globalAlpha = 0.4;
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
             ctx.restore();
         }
     },
@@ -751,25 +933,23 @@ Planet.prototype = {
 };
 
 
-function MonsterPlay() {
+
+
+
+function PlanetPlay() {
 }
-MonsterPlay.prototype = Object.create(Planet.prototype);
-MonsterPlay.prototype.playLoop = function () {
+PlanetPlay.prototype = Object.create(Planet.prototype);
+PlanetPlay.prototype.playLoop = function () {
 
     var that = this;
 
-    var monstervector = {
-        x: Math.round(this.x - hero.x),
-        y: Math.round(this.y - hero.y)
-    };
+    var monstervector = {x: Math.round(this.x - hero.x), y: Math.round(this.y - hero.y)};
     monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));
 
     //console.log(monstervector.length);
-
     if (monstervector.length > 1500) {
         that.channel.gain.value = 0;
-    }
-    else if (monstervector.length < 1500 && monstervector.length > 500) {
+    } else if (monstervector.length < 1500 && monstervector.length > 500) {
         that.channel.gain.value = map_range(monstervector.length, 500, 1500, this.midGain, 0);
         //console.log(planet1gain.gain.value);
     } else if (monstervector.length < 500) {
@@ -778,6 +958,43 @@ MonsterPlay.prototype.playLoop = function () {
     }
 };
 
+
+function PlanetFilter() {
+}
+PlanetFilter.prototype = Object.create(Planet.prototype);
+PlanetFilter.prototype.playLoop = function () {
+
+    var monstervector = {
+        x: Math.round(this.xCenter() - hero.x),
+        y: Math.round(this.yCenter() - hero.y)
+    };
+    monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));
+
+    if (monstervector.length > 400) {
+        lowpassFilter.frequency.value = 20000;
+        lowpassFilter2.frequency.value = 20000;
+    } else if (monstervector.length < 400) {
+        lowpassFilter.frequency.value = map_range(monstervector.length, 0, 400, 0, 5000);
+        lowpassFilter2.frequency.value = map_range(monstervector.length, 0, 400, 0, 5000);
+        //console.log("lps: " + lowpassFilter.frequency.value);
+    }
+};
+
+var BlackHole = function () {
+    this.x = 2200;
+    this.y = 3350;
+    this.monsterImage = 'images/BlackHole.png';
+    this.loop = false;
+    this.width = 64;
+    this.height = 64;
+    this.radius = 32;
+    //this.sound = 26;
+    //this.timing = 8;
+    //this.maxGain = 0.17;
+    //this.midGain = 0.05;
+    //this.channel = planet1gain;
+};
+BlackHole.prototype = Object.create(PlanetFilter.prototype);
 
 var PlanetMars = function () {
     this.x = 2900;
@@ -788,9 +1005,8 @@ var PlanetMars = function () {
     this.maxGain = 0.17;
     this.midGain = 0.05;
     this.channel = planet1gain;
-    this.token = "planet1play";
 };
-PlanetMars.prototype = Object.create(MonsterPlay.prototype);
+PlanetMars.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetBlue1 = function () {
     this.x = 3500;
@@ -799,10 +1015,9 @@ var PlanetBlue1 = function () {
     this.sound = 27;
     this.timing = 16;
     this.channel = planet2gain;
-    this.token = "planet2play";
 
 };
-PlanetBlue1.prototype = Object.create(MonsterPlay.prototype);
+PlanetBlue1.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetBlue2 = function () {
     this.x = 3400;
@@ -813,9 +1028,8 @@ var PlanetBlue2 = function () {
     this.channel = planet3gain;
     this.maxGain = 0.25;
     this.midGain = 0.10;
-    this.token = "planet3play";
 };
-PlanetBlue2.prototype = Object.create(MonsterPlay.prototype);
+PlanetBlue2.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetPinkMosaic = function () {
     this.x = 600;
@@ -826,9 +1040,8 @@ var PlanetPinkMosaic = function () {
     this.channel = planet4gain;
     this.maxGain = 0.25;
     this.midGain = 0.10;
-    this.token = "planet4play";
 };
-PlanetPinkMosaic.prototype = Object.create(MonsterPlay.prototype);
+PlanetPinkMosaic.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetFlute = function () {
     this.x = 2300;
@@ -839,9 +1052,8 @@ var PlanetFlute = function () {
     this.channel = planet5gain;
     this.maxGain = 0.25;
     this.midGain = 0.10;
-    this.token = "planet5play";
 };
-PlanetFlute.prototype = Object.create(MonsterPlay.prototype);
+PlanetFlute.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetCoconut = function () {
     this.x = 1400;
@@ -852,9 +1064,8 @@ var PlanetCoconut = function () {
     this.channel = planet6gain;
     this.maxGain = 0.25;
     this.midGain = 0.10;
-    this.token = "planet6play";
 };
-PlanetCoconut.prototype = Object.create(MonsterPlay.prototype);
+PlanetCoconut.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetBreakbeat = function () {
     this.x = 2900;
@@ -864,12 +1075,11 @@ var PlanetBreakbeat = function () {
     this.soundMax = 40;
     this.timing = 2;
     this.channel = planet7gain;
-    this.maxGain = 0.25;
-    this.midGain = 0.10;
-    this.token = "planet7play";
+    this.maxGain = 0.2;
+    this.midGain = 0.08;
     this.planetDice = true;
 };
-PlanetBreakbeat.prototype = Object.create(MonsterPlay.prototype);
+PlanetBreakbeat.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetWarble = function () {
     this.x = 1700;
@@ -881,10 +1091,10 @@ var PlanetWarble = function () {
     this.channel = planet8gain;
     this.maxGain = 0.25;
     this.midGain = 0.10;
-    this.token = "planet8play";
     this.planetDice = true;
+
 };
-PlanetWarble.prototype = Object.create(MonsterPlay.prototype);
+PlanetWarble.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetPlink = function () {
     this.x = 700;
@@ -896,23 +1106,21 @@ var PlanetPlink = function () {
     this.channel = planet9gain;
     this.maxGain = 0.4;
     this.midGain = 0.2;
-    this.token = "planet9play";
     this.planetDice = true;
 };
-PlanetPlink.prototype = Object.create(MonsterPlay.prototype);
+PlanetPlink.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetFlange = function () {
-    this.x = 4500;
-    this.y = 1000;
+    this.x = 4200;
+    this.y = 1150;
     this.monsterImage = 'images/Planet8.png';
-    this.sound = 55;
+    this.sound = 72;
     this.timing = 8;
     this.channel = planet10gain;
-    this.maxGain = 0.4;
-    this.midGain = 0.2;
-    this.token = "planet10play";
+    this.maxGain = 0.12;
+    this.midGain = 0.05;
 };
-PlanetFlange.prototype = Object.create(MonsterPlay.prototype);
+PlanetFlange.prototype = Object.create(PlanetPlay.prototype);
 
 var PlanetBlobby = function () {
     this.x = 450;
@@ -924,10 +1132,45 @@ var PlanetBlobby = function () {
     this.channel = planet11gain;
     this.maxGain = 0.4;
     this.midGain = 0.2;
-    this.token = "planet11play";
     this.planetDice = true;
 };
-PlanetBlobby.prototype = Object.create(MonsterPlay.prototype);
+PlanetBlobby.prototype = Object.create(PlanetPlay.prototype);
+
+var Planet12 = function () {
+    this.x = 3500;
+    this.y = 600;
+    this.monsterImage = 'images/Planet11.png';
+    this.sound = 73;
+    this.timing = 8;
+    this.channel = planet12gain;
+    this.maxGain = 0.25;
+    this.midGain = 0.10;
+};
+Planet12.prototype = Object.create(PlanetPlay.prototype);
+
+var Planet13 = function () {
+    this.x = 900;
+    this.y = 2600;
+    this.monsterImage = 'images/Planet14.png';
+    this.sound = 74;
+    this.timing = 4;
+    this.channel = planet13gain;
+    this.maxGain = 0.17;
+    this.midGain = 0.07;
+};
+Planet13.prototype = Object.create(PlanetPlay.prototype);
+
+var Planet14 = function () {
+    this.x = 4600;
+    this.y = 2500;
+    this.monsterImage = 'images/Planet12.png';
+    this.sound = 79;
+    this.timing = 4;
+    this.channel = planet14gain;
+    this.maxGain = 0.17;
+    this.midGain = 0.07;
+};
+Planet14.prototype = Object.create(PlanetPlay.prototype);
 
 
 //function Powerup() {
@@ -984,7 +1227,6 @@ PlanetBlobby.prototype = Object.create(MonsterPlay.prototype);
 //
 //};
 
-
 var HealthUp = function (x, y) {
     this.x = x;
     this.y = y;
@@ -998,19 +1240,133 @@ var HealthUp = function (x, y) {
     this.sizey = 32;
     this.monsterImage = "images/HeartGreen.png";
     this.sound = 17;
-    this.timing = 1;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    }
     this.flag = "healthUpPlay";
     this.isPowerUp = true;
     this.powerUp = function () {
-        hero.health += 200;
+        hero.health += 100;
+        xhealth.innerHTML = ("Space Health:  " + hero.health);
     };
 };
-HealthUp.prototype = Object.create(Monster.prototype);
+HealthUp.prototype = Object.create(Npc.prototype);
+
+
+var HealthFlyUp = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 32;
+    this.height = 32;
+    this.health = 10;
+    this.damage = 0;
+    this.points = 0;
+    this.speed = 160;
+    this.sizex = 32;
+    this.sizey = 32;
+    this.monsterImage = "images/HeartGreenEyes.png";
+    this.sound = 17;
+    //this.timing = 1;
+    this.timing = function () {
+        return !!(current16thNote % 1 === 0);
+    }
+    this.flag = "healthUpPlay";
+    this.isPowerUp = true;
+    this.powerUp = function () {
+        hero.health += 100;
+        xhealth.innerHTML = ("Space Health:  " + hero.health);
+    };
+};
+HealthFlyUp.prototype = Object.create(MonsterRun.prototype);
+
+
+var GunUp = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 16;
+    this.height = 24;
+    this.health = 10;
+    this.damage = 0;
+    this.points = 0;
+    this.speed = 80;
+    this.sizex = 16;
+    this.sizey = 24;
+    this.monsterImage = "images/Potion3.png";
+    this.sound = 17;
+    //this.barTiming = 4;
+    //this.timing = 16;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    }
+    this.flag = "gunUpPlay";
+    this.isPowerUp = true;
+    this.powerUp = function () {
+        if (gun < 2) {
+            gun += 1;
+            //document.getElementById("xpowerup").innerHTML = "Bassline Upgrade!!";
+            xpowerup.innerHTML = "Bassline Upgrade!!";
+            setTimeout(function () {
+                powerupText = "";
+                xpowerup.innerHTML = "";
+            }, 3000);
+        }
+        else {
+            //bulletSizeMod += 2;
+            bulletDamageMod += 5;
+            powerupText = "Bullet Damage Up!!";
+            xpowerup.innerHtml = "Bullet Damage Up!!!";
+            setTimeout(function () {
+                //powerupText = "";
+                xpowerup.innerHtml = "";
+            }, 3000);
+        }
+    };
+};
+GunUp.prototype = Object.create(MonsterRun.prototype);
+
+
+var SlowPotion = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 16;
+    this.height = 24;
+    this.health = 10;
+    this.damage = - 20;
+    this.points = 0;
+    this.speed = 70;
+    this.sizex = 16;
+    this.sizey = 24;
+    this.monsterImage = "images/Potion2.png";
+    this.sound = 17;
+    //this.barTiming = 4;
+    //this.timing = 16;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    }
+    this.flag = "slowPotionPlay";
+    this.isPowerUp = true;
+    this.powerUp = function () {
+        speedMod = 0.4;
+        convolverWarehouse.buffer = impulseBufferReverse;
+        masterWet.gain.value = 0.9;
+        xpowerup.innerHTML = "Slow Enemies!!!!";
+        setTimeout(function () {
+            speedMod = 1;
+            convolverWarehouse.buffer = impulseBuffer;
+            masterWet.gain.value = 0.2;
+            xpowerup.innerHTML = "";
+            console.log(speedMod);
+        }, 15000);
+    };
+};
+SlowPotion.prototype = Object.create(MonsterRun.prototype);
 
 
 var Bullet = function (x, y, damage, type) {
 
     this.damage = typeof damage !== 'undefined' ? damage : 10;
+    //this.damage += bulletDamageMod;
     this.x = x;
     this.y = y;
     this.velocity = [0, 0];
@@ -1025,99 +1381,40 @@ var Bullet = function (x, y, damage, type) {
 
 Bullet.prototype = {
 
-    width: 8,
-    height: 8,
+    width: 2,
+    height: 2,
 
     update: function () {
 
         var that = this;
+        var index = bullets.indexOf(this);
 
-
-        this.x += this.velocity[0];
-        this.y += this.velocity[1];
-        //for(var i in planets) {
-        //    var planet = planets[i];
-        //    collide(this, planet, true, function (collides) {
-        //        if (collides === true) {
-        //            planet.health -= that.damage;
-        //            var index = bullets.indexOf(that);
-        //            bullets.splice(index, 1);
-        //            playSound(samplebb[planet.sound], gainNode5);
-        //        }
-        //    }, 2);
-        //}
-        //
-        //if (this.type !== "hero") {
-        //    collide(this, hero, true, function (collides) {
-        //        if (collides === true) {
-        //            hero.health -= that.damage;
-        //            var index = bullets.indexOf(that);
-        //            bullets.splice(index, 1);
-        //        }
-        //    }, 2);
-        //}
-        //else if (this.type === "hero") {
-        //    for (var y = 0, m = monsters.length; y < m; ++y) {
-        //        var monst = monsters[y];
-        //
-        //        collide(this, monst, true, function (collides) {
-        //            if (collides === true) {
-        //                monst.health -= that.damage;
-        //                var index = bullets.indexOf(that);
-        //                bullets.splice(index, 1);
-        //            }
-        //        }, 2);
-        //    }
-        //}
+        if (this.type !== "hero") {
+            this.x += this.velocity[0] * speedMod;
+            this.y += this.velocity[1] * speedMod;
+        } else {
+            this.x += this.velocity[0];
+            this.y += this.velocity[1];
+        }
 
         for (var i in planets) {
             var planet = planets[i];
-            //var collides;
-            //if (
-            //    this.x > planet.x + planet.width ||
-            //    this.x + planet.width / 2 < planet.x ||
-            //    this.y > planet.y + planet.height ||
-            //    this.y + planet.height / 2 < planet.y
-            //) {
-            //    collides1 = false;
-            //} else {
-            //    collides1 = true;
-            //}
-            //if (collides1 === true) {
-            //    var index = bullets.indexOf(this);
-            //    bullets.splice(index, 1);
-            //    if (this.type === "hero") {
-            //        planet.health -= this.damage;
-            //        playSound(samplebb[planet.hitSound], gainNode4);
-            //
-            //    }
-            //}
-
-            //collide(this, planet, true, function (collides) {
-            //    if (collides === true) {
-            //
-            //        var index = bullets.indexOf(this);
-            //        bullets.splice(index, 1);
-            //        if (this.type === "hero") {
-            //            playSound(samplebb[planet.hitSound], gainNode4);
-            //            planet.health -= 100;
-            //
-            //        }
-            //    }
-            //}, 2);
 
             if (circleCollide(planet, this)) {
                 var index = bullets.indexOf(this);
                 bullets.splice(index, 1);
                 if (this.type === "hero") {
                     playSound(samplebb[planet.hitSound], gainNode4);
-                    planet.health -= 100;
+                    planet.health -= this.damage + bulletDamageMod;
                 }
             }
         }
 
         if (this.type !== "hero") {
             var collides1;
+            //var index = bullets.indexOf(this);
+
+
             if (
                 this.x > hero.x + hero.width ||
                 this.x + hero.width / 2 < hero.x ||
@@ -1130,76 +1427,89 @@ Bullet.prototype = {
             }
             if (collides1 === true) {
                 hero.health -= this.damage;
-                var index = bullets.indexOf(this);
+                playSound(samplebb[82], gainNode4);
+                xhealth.innerHTML = ("Space Health: " + hero.health);
                 bullets.splice(index, 1);
             }
+
         }
 
         else if (this.type === "hero") {
             for (var y = 0, m = monsters.length; y < m; ++y) {
                 var monst = monsters[y];
                 if (!monst.isPowerUp) {
-                    if (
-                        this.x > monst.x + monst.width ||
-                        this.x + monst.width / 2 < monst.x ||
-                        this.y > monst.y + monst.height ||
-                        this.y + monst.height / 2 < monst.y
-                    ) {
-                        collides = false;
-                    }
-                    else {
-                        collides = true;
-                    }
-                    if (collides === true && monst.isDead === false) {
-                        monst.health -= this.damage;
-                        var index = bullets.indexOf(this);
-                        if (bulletpiercePower === false) {
-                            bullets.splice(index, 1);
-                        }
+                    //var collides;
+                    //if (
+                    //    this.x > monst.x + monst.width ||
+                    //    this.x + monst.width / 2 < monst.x ||
+                    //    this.y > monst.y + monst.height ||
+                    //    this.y + monst.height / 2 < monst.y
+                    //) {
+                    //    collides = false;
+                    //} else {
+                    //    collides = true;
+                    //}
+                    //if (collides === true && monst.isDead === false) {
+                    //    monst.health -= this.damage + bulletDamageMod;
+                    //    //console.log("bullet damage : : : " + this.damage);
+                    //    //var index = bullets.indexOf(this);
+                    //    if (bulletpiercePower === false) {
+                    //        bullets.splice(index, 1);
+                    //    }
+                    //}
+
+                    if(!monst.isDead) {
+                        collide(this, monst, true, function (collides) {
+                            if (collides === true) {
+                                monst.health -= that.damage + bulletDamageMod;
+                                //console.log("bullet damage : : : " + this.damage);
+                                //var index = bullets.indexOf(this);
+                                if (bulletpiercePower === false) {
+                                    bullets.splice(index, 1);
+                                }
+                            }
+
+                        })
                     }
                 }
+                }
+            }
+            //setTimeout(function(){ bullets.splice(index, 1); }, 3000);
+
+            var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
+            playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
+            // BULLET DISAPPEAR WHEN FAR AWAY
+            if (playerdist.length > 1000) {
+                //var index = bullets.indexOf(this);
+                bullets.splice(index, 1);
             }
         }
+        ,
 
+        render: function () {
+            ctx.save();
+            ctx.translate(this.x, this.y);  // +8?
+            ctx.rotate(this.angle);
 
-        var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
-        playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
-
-        // BULLET DISAPPEAR WHEN FAR AWAY
-        if (playerdist.length > 1000) {
-            var index = bullets.indexOf(this);
-            bullets.splice(index, 1);
+            if (this.type === "hero") {
+                ctx.drawImage(resources.get("images/blt.png"), 0, 0, 3, 3);         // -8?
+            } else if (this.type === "enemy1") {
+                ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 30, 8);
+            } else if (this.type === "enemy2") {
+                ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 8, 6);
+            }
+            ctx.restore();
         }
     }
-}
 
 
 // Game objects
-var hero = {
-    x: 3000,
-    y: 3000,
-
-    velY: 0,
-    velX: 0,
-    //speed: 50,
-    friction: 0.8,
-
-
-    width: 60,
-    height: 20,
-    health: 2000,
-    speed: 300 // pixels per second
-    //
-    //update: function () {
-    //
-    //    this.velY *= this.friction;
-    //    this.y += this.velY;
-    //    this.velX *= this.friction;
-    //    this.x += this.velX;
-    //}
-};
-
-//function damagePlayer(amt) {
-//    hero.health -= amt;
-//}
-//})();
+    var hero = {
+        x: 2196,
+        y: 3328,
+        width: 60,
+        height: 20,
+        health: 420,
+        speed: 300, // pixels per second
+        image: "images/Hero.png"
+    };
