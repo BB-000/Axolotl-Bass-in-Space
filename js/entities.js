@@ -363,8 +363,6 @@ MonsterShoot.prototype.shoot = function () {
 };
 
 
-
-
 function MonsterFly() {
 }
 MonsterFly.prototype = Object.create(Npc.prototype);
@@ -743,7 +741,7 @@ var Wizard = function (position) {
     this.health = 2000;
     this.damage = 200;
     this.points = 1500;
-    this.speed = rand(50,150);
+    this.speed = rand(50, 150);
     this.sizex = 28;
     this.sizey = 88;
     this.shooter = true;
@@ -779,7 +777,7 @@ var WizardGreen = function (position) {
     this.health = 5000;
     this.damage = 200;
     this.points = 6000;
-    this.speed = rand(30,50);
+    this.speed = rand(30, 50);
     this.sizex = 56;
     this.sizey = 196;
     this.shooter = true;
@@ -931,9 +929,6 @@ Planet.prototype = {
 
 
 };
-
-
-
 
 
 function PlanetPlay() {
@@ -1312,7 +1307,6 @@ var GunUp = function (position) {
             }, 3000);
         }
         else {
-            //bulletSizeMod += 2;
             bulletDamageMod += 5;
             powerupText = "Bullet Damage Up!!";
             xpowerup.innerHtml = "Bullet Damage Up!!!";
@@ -1332,7 +1326,7 @@ var SlowPotion = function (position) {
     this.width = 16;
     this.height = 24;
     this.health = 10;
-    this.damage = - 20;
+    this.damage = -20;
     this.points = 0;
     this.speed = 70;
     this.sizex = 16;
@@ -1458,58 +1452,56 @@ Bullet.prototype = {
                     //    }
                     //}
 
-                    if(!monst.isDead) {
+                    if (!monst.isDead) {
                         collide(this, monst, true, function (collides) {
                             if (collides === true) {
                                 monst.health -= that.damage + bulletDamageMod;
-                                //console.log("bullet damage : : : " + this.damage);
-                                //var index = bullets.indexOf(this);
-                                if (bulletpiercePower === false) {
-                                    bullets.splice(index, 1);
-                                }
+                                //if (bulletpiercePower === false) {
+                                bullets.splice(index, 1);
+                                //}
                             }
 
                         })
                     }
                 }
-                }
-            }
-            //setTimeout(function(){ bullets.splice(index, 1); }, 3000);
-
-            var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
-            playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
-            // BULLET DISAPPEAR WHEN FAR AWAY
-            if (playerdist.length > 1000) {
-                //var index = bullets.indexOf(this);
-                bullets.splice(index, 1);
             }
         }
-        ,
+        //setTimeout(function(){ bullets.splice(index, 1); }, 3000);
 
-        render: function () {
-            ctx.save();
-            ctx.translate(this.x, this.y);  // +8?
-            ctx.rotate(this.angle);
-
-            if (this.type === "hero") {
-                ctx.drawImage(resources.get("images/blt.png"), 0, 0, 3, 3);         // -8?
-            } else if (this.type === "enemy1") {
-                ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 30, 8);
-            } else if (this.type === "enemy2") {
-                ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 8, 6);
-            }
-            ctx.restore();
+        var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
+        playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
+        // BULLET DISAPPEAR WHEN FAR AWAY
+        if (playerdist.length > 1000) {
+            //var index = bullets.indexOf(this);
+            bullets.splice(index, 1);
         }
     }
+    ,
+
+    render: function () {
+        ctx.save();
+        ctx.translate(this.x, this.y);  // +8?
+        ctx.rotate(this.angle);
+
+        if (this.type === "hero") {
+            ctx.drawImage(resources.get("images/blt.png"), 0, 0, 3, 3);         // -8?
+        } else if (this.type === "enemy1") {
+            ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 30, 8);
+        } else if (this.type === "enemy2") {
+            ctx.drawImage(resources.get("images/spawn.png"), 0, 0, 8, 6);
+        }
+        ctx.restore();
+    }
+}
 
 
 // Game objects
-    var hero = {
-        x: 2196,
-        y: 3328,
-        width: 60,
-        height: 20,
-        health: 420,
-        speed: 300, // pixels per second
-        image: "images/Hero.png"
-    };
+var hero = {
+    x: 2196,
+    y: 3328,
+    width: 60,
+    height: 20,
+    health: 420,
+    speed: 300, // pixels per second
+    image: "images/Hero.png"
+};

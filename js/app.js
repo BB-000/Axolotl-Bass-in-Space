@@ -2,41 +2,6 @@
  * Created by Barnabeeeeee on 06/04/15.
  */
 
-
-//"use strict";
-
-//var src
-//    , fftSize = 1024
-//    , audio = new Audio()
-//    , ac = new webkitAudioContext()
-//    , comp = ac.createDynamicsCompressor()
-//    , bar = document.querySelector('.bar')
-//    , url = 'http://static1.kevincennis.com/sounds/callmemaybe.mp3'
-//
-//audio.src = url;
-//comp.threshold.value = -40;
-//comp.ratio.value = 10;
-//
-//audio.addEventListener('canplaythrough', function() {
-//    src = audioContext.createMediaElementSource(audio);
-//    src.connect(compressor);
-//    compressor.connect(audioContext.destination);
-//    //audio.play();
-//    draw();
-//}, false);
-
-//function draw() {
-//    var reduction = comp.reduction.value
-//        , scaled = scale(reduction, -192, 0, 0, 100);
-//    bar.style.width = ( -1 * reduction ) + '%';
-//    RequestAnimFrame(draw);
-//}
-
-//function scale( val, f0, f1, t0, t1 ) {
-//    return (val - f0) * (t1 - t0) / (f1 - f0) + t0;
-//}
-
-
 var requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -49,58 +14,41 @@ var requestAnimFrame = (function () {
         };
 }());
 
-
-
-
 //Create the canvas
 var canvas = document.createElement("canvas");
 ctx = canvas.getContext("2d");
-//ctx.imageSmoothingEnabled = false;
-//ctx.mozImageSmoothingEnabled = false;
-//ctx.webkitImageSmoothingEnabled = false;
-//ctx.msImageSmoothingEnabled = false;
-//ctx.imageSmoothingEnabled = false;
-//ctx.translate(0.5, 0.5);
 canvas.style.zIndex = 8;
-var xdiv = document.createElement("div");
-xdiv.id = "canvas-wrap";
-
-var overlay = document.createElement("div");
-overlay.id = "overlay";
-var xscore = document.createElement("div");
-var xhealth = document.createElement("div");
-var xpowerup = document.createElement("div");
-xscore.id = "xscore";
-xhealth.id = "xhealth";
-xpowerup.id = "xpowerup";
-//overlay.font = "20px Helvetica";
-xscore.innerHTML = "Space Cash:  0";
-xhealth.innerHTML = ("Space Health:  " + hero.health);
-xpowerup.innerHTML = "";
-
-var pausediv = document.createElement("div");
-pausediv.id = "pausediv";
-var pausetext = document.createElement("div");
-pausetext.id = "pausetext";
-pausetext.innerHTML = "";
-
-var volume = document.createElement("div");
-volume.id = "controlz";
-volume.innerHTML = ("<p>Volume<input id='gainSlider' type='range' min='0' max='1' step='0.05' value='1' oninput='updateVolume(this.value)'/></input></p>");
-
-//document.body.appendChild(pausediv);
-
-
 canvas.width = window.innerWidth - 20;
 canvas.height = window.innerHeight - 20;
 canvas.oncontextmenu = function () {                                                                                    // Disable right click on the canvas
     return false;
 }
-//canvas.width = 600;
-//canvas.height = 600;
-document.getElementsByTagName('body')[0].appendChild(xdiv);
 
-xdiv.appendChild(canvas);
+var xdiv = document.createElement("div");
+var overlay = document.createElement("div");
+var xscore = document.createElement("div");
+var xhealth = document.createElement("div");
+var xpowerup = document.createElement("div");
+var pausediv = document.createElement("div");
+var pausetext = document.createElement("div");
+var volume = document.createElement("div");
+
+xdiv.id = "canvas-wrap";
+overlay.id = "overlay";
+xscore.id = "xscore";
+xhealth.id = "xhealth";
+xpowerup.id = "xpowerup";
+xscore.innerHTML = "Space Cash:  0";
+xhealth.innerHTML = ("Space Health:  " + hero.health);
+xpowerup.innerHTML = "";
+pausediv.id = "pausediv";
+pausetext.id = "pausetext";
+pausetext.innerHTML = "";
+volume.id = "controlz";
+volume.innerHTML = ("<p>Volume<input id='gainSlider' type='range' min='0' max='1' step='0.05' value='1' oninput='updateVolume(this.value)'/></input></p>");
+
+document.body.appendChild(xdiv);                                                                                        // Wrapper for canvas and overlay
+xdiv.appendChild(canvas);                                                                                               // Add canvas and overlay to page
 xdiv.appendChild(overlay);
 xdiv.appendChild(pausediv);
 xdiv.appendChild(volume);
@@ -109,22 +57,14 @@ overlay.appendChild(xscore);
 overlay.appendChild(xhealth);
 overlay.appendChild(xpowerup);
 
-
-//document.body.appendChild(canvas);
-
-//  main game loop
+//  MAIN GAME LOOP  //
 var lastTime;
 function main() {
-
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
     update(dt);
     render();
     lastTime = now;
-    //var bar = document.querySelector('.bar');
-    //var reduction = compressor.reduction.value
-    //    , scaled = scale(reduction, -192, 0, 0, 100);
-    //bar.style.width = ( -1 * reduction ) + '%';
     requestAnimFrame(main);
 }
 
@@ -134,7 +74,6 @@ function init() {
     timerWorker = new Worker("utils/metronomeworker.js");                                                               // Audio scheduling timer, ticks every beat
     timerWorker.onmessage = function (e) {
         if (e.data == "tick") {
-            //console.log("tick!");
             scheduler();
         }
         else
@@ -142,7 +81,7 @@ function init() {
     };
     timerWorker.postMessage({"interval": lookahead});
 
-
+    //   Event Listeners for movement and shooting     //
     window.addEventListener("keydown", function (e) {
         keysDown[e.keyCode] = true;
     }, false);
@@ -153,23 +92,20 @@ function init() {
 
     window.addEventListener("keydown", function (e) {
         if ( e.keyCode === 32 ) {
-            if (state === "playing") {                                                                                      // Set shoot to true if player is holding shoot button
+            if (state === "playing") {                                                                                      // Set shoot to true if player is holding shoot button (spacebar)
                 shootx = true;
             }
             if (paused === true) {
-                paused = false;
-                //document.getElementById("pausetext").innerHTML = "";
+                paused = false;                                                                                             // Unpause the game and remove pause overlay if clicked
                 pausetext.innerHTML = "";
             }
         }
-
     });
 
     window.addEventListener("keyup", function (e) {
         if ( e.keyCode === 32 ) {
             shootx = false;
         }
-
     });
 
     window.addEventListener("mousedown", function (e) {
@@ -177,12 +113,11 @@ function init() {
             state = "playing";
             play();
         }
-        if (state === "playing") {                                                                                      // Set shoot to true if player is holding shoot button
+        if (state === "playing") {                                                                                      // Set shoot to true if player is holding shoot button (mouse click)
             shootx = true;
         }
         if (paused === true) {
             paused = false;
-            //document.getElementById("pausetext").innerHTML = "";
             pausetext.innerHTML = "";
         }
     });
@@ -198,7 +133,6 @@ function init() {
 
 
     window.addEventListener('resize', resizeCanvas);                                                                    // Resizes the game if it is resized / zoomed
-
     // Get Browser-Specifc Prefix
     function getBrowserPrefix() {
 
@@ -258,9 +192,7 @@ function init() {
         }
     });
 
-
-    ///////////////////////////////
-    //starBackground = ctx.createPattern(resources.get('images/Stars.jpg'), 'repeat');
+    ///////////////////////////////      Spawn Planets
     spawnPlanet(1, PlanetMars);
     spawnPlanet(1, PlanetBlue1);
     spawnPlanet(1, PlanetBlue2);
@@ -277,19 +209,12 @@ function init() {
     spawnPlanet(1, Planet14);
     spawnPlanet(1, BlackHole);
 
-
-
-    //var jj = new Mosquito({x:2900,y:2900});
-    //monsters.push(jj);
-    //reset();
     lastTime = Date.now();
-    //play();
-    main();
 
+    main();                                                                                                             // Call main game loop!
 }
 
 resources.load([
-    'images/background1.jpg',
     'images/startscreenload.png',
     'images/startscreen.png',
     'images/Stars.jpg',
@@ -340,83 +265,31 @@ resources.load([
 ]);
 resources.onReady(init);
 
-
-//var starBackground;
 var monsters = [];
-//var powers = [];
 var planets = [];
 
 var bulletX;
 var bulletY;
 
-var bulletpiercePower = false;
+//var bulletpiercePower = false; //*
 
 var paused = false;
 var state = "startmenu";
-var then;
+//var then;
 var score = 0;
 var ctx;
-var spawnN = 0;
+//var spawnN = 0;
 var shootx = false;
-var play1 = false;1
-var gun = 0;
+//var play1 = false;1
+var gun = 0;                                                                                                            // Weapon number
 var gameTime = 0;
 var gameOver = false;
 var readyforblastoff = false;
-// keyboard controls
-var keysDown = {};
 
-var camera = {x: hero.x - canvas.width / 2, y: hero.y - canvas.height / 2};
+var keysDown = {};                                                                                                      // object holding keys pressed
+var camera = {x: hero.x - canvas.width / 2, y: hero.y - canvas.height / 2};                                             // Viewpowt position
 
-//var camera = {
-//    x: hero.x - canvas.width / 2,
-//    y: hero.y - canvas.height / 2
-//};
-//function Camera(){
-//    //this.x = hero.x - canvas.width / 2;
-//    //this.y = hero.y - canvas.height / 2;
-//    this.x = canvas.height * 0.5;
-//    this.y = canvas.height * 0.5;
-//    this.xScroll = 0;
-//    this.yScroll = 0;
-//
-//    this.position = [this.xScroll, this.yScroll];
-//    this.prevPosition = [this.xScroll, this.yScroll];
-//    this.curPosition = [this.xScroll, this.yScroll];
-//
-//    this.lerpAmount = 1.0;
-//
-//}
-//
-//Camera.prototype.Lerp = function(A, B, t){
-//    return (A * t) + ((1.0 - t) * B);
-//};
-//
-//Camera.prototype.update = function(dt){
-//    // Get the distance from the player to the middle of the screen (our focal point)
-//    this.dx = (hero.x - this.x);
-//    this.dy = (hero.y - this.y);
-//    // The camera is moving
-//    this.position = [this.xScroll, this.yScroll];
-//    if(this.position != this.curPosition){
-//        this.lerpAmount = 0.0;
-//        this.curPosition = this.position;
-//    }
-//    // increase the speed of the camera if we are not at full camera speed
-//    if(this.lerpAmount < 1.0){
-//        this.lerpAmount += 0.05;
-//    } else {
-//        this.prevPosition = this.curPosition;
-//    }
-//    // Interpolate the  current position on the x-axis
-//    this.xScroll = this.Lerp(this.dx, this.curPosition[0], this.lerpAmount);
-//    // Interpolate the current position on the y-axis
-//    this.yScroll = this.Lerp(this.dy, this.curPosition[1], this.lerpAmount);
-//};
-//
-//var camera = new Camera();
-
-var bulletSizeMod = 0;
+//var bulletSizeMod = 0;
 var bulletDamageMod = 0;
 var speedMod = 1;
 
@@ -1126,7 +999,7 @@ function initStats() {
     hero.health = 420;
 
     bulletDamageMod = 0;
-    bulletSizeMod = 0;
+    //bulletSizeMod = 0;
 
     sharkShoot = false;
     bugShoot = false;
@@ -1152,7 +1025,7 @@ function initStats() {
     lowpassFilter.frequency.value = 20000;
     lowpassFilter2.frequency.value = 20000;
 
-    bulletpiercePower = false;
+    //bulletpiercePower = false;
 
     gun = 0;
     current16thNote = 0;
