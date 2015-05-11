@@ -1,61 +1,24 @@
 /////////////Audio/////////////Audio/////////////Audio/////////////Audio/////////////Audio/////////////Audio
 
 // Audio / Timing Variables
-//audioContext = null;
 var isPlaying = false;      // Are we currently playing?
-//var startTime;              // The start time of the entire sequence.* *
-
 var current16thNote;        // What note is currently last scheduled?
 var current64thNote = 0;        // What note is currently last scheduled?
-var barNumber = 0;
+var barNumber = 0;              // Timing Variables
 var barNumberL = 0;
-var barCount = 0;
 var bar4Number = 0;
 var bar16Number = 0;
 var tempo = 145.0;          // tempo (in beats per minute)
-var lookahead = 25;       // How frequently to call scheduling function
-//(in milliseconds)
+var lookahead = 25;       // How frequently to call scheduling function (in milliseconds)
 var scheduleAheadTime = 0.1;    // How far ahead to schedule audio (sec)
-// This is calculated from lookahead, and overlaps
-// with next interval (in case the timer is late)
+// calculated from lookahead, and overlaps with next interval (in case the timer is late)
 var nextNoteTime = 0.0;     // when the next note is due.
-//var noteResolution = 0;     // 0 == 16th, 1 == 8th, 2 == quarter note
-
-//var noteLength = 0.05;      // length of "beep" (in seconds)* *
-
-//var canvas,                 // the canvas element
-//    canvasContext;          // canvasContext is the canvas' context 2D
-
 //var last16thNoteDrawn = -1;
-//var notesInQueue = [];      // the notes that have been put into the web audio,
-// and may or may not have played yet. {note, time}
+//var notesInQueue = [];      // {note, time}
 var timerWorker = null;     // The Web Worker used to fire timer messages
 
-
 var bufferLoader;
-var samplebb = [];
-
-
-//audioContext = new AudioContext();
-
-//var AudioContext = (
-//window.AudioContext ||
-//window.webkitAudioContext ||
-//null
-//);
-
-
-//// load the impulse response asynchronously
-//var request = new XMLHttpRequest();
-//request.open("GET", "sounds/IR-WAREHOUSE.wav", true);
-//request.responseType = "arraybuffer";
-//
-//request.onload = function () {
-//    convolverWarehouse.buffer = audioContext.createBuffer(request.response, false,
-//    playSound();
-//}
-//request.send();
-
+var samplebb = [];          // Sounds Array
 
 /////////////////   FX      /////////////////////////
 var audioContext = new AudioContext();
@@ -92,7 +55,6 @@ var masterChannel = audioContext.createGain();
 var gainNode1 = audioContext.createGain();
 var gainNode2 = audioContext.createGain();
 var gainNode3 = audioContext.createGain();
-//var gainNode3A = audioContext.createGain();
 var gainNode3B = audioContext.createGain();
 var gainNode3C = audioContext.createGain();
 var gainNode3D = audioContext.createGain();
@@ -100,13 +62,7 @@ var gainNode3E = audioContext.createGain();
 var gainNode4 = audioContext.createGain();
 var gainNode5 = audioContext.createGain();
 
-//var delays = audioContext.createGain();
-
-var dry1 = audioContext.createGain();
-var wet1 = audioContext.createGain();
-
 var masterDry = audioContext.createGain();
-//var masterDryDelay = audioContext.createGain();
 var masterWet = audioContext.createGain();
 
 var planet1gain = audioContext.createGain();
@@ -128,8 +84,6 @@ var planet14gain = audioContext.createGain();
 var convolverWarehouse = audioContext.createConvolver();
 convolverWarehouse.buffer = impulseBuffer;
 
-//convolverWarehouse.gain.value = 1.0;
-
 var lowpassFilter = audioContext.createBiquadFilter();
 var lowpassFilter2 = audioContext.createBiquadFilter();
 lowpassFilter.frequency.value = 20000;
@@ -144,7 +98,6 @@ masterChannel.gain.value = 1;            // MASTER VOLUME
 gainNode1.gain.value = 0.9;
 gainNode2.gain.value = 0.37;
 gainNode3.gain.value = 0.3;
-//gainNode3A.gain.value = 0.19;
 
 gainNode3D.gain.value = 0.13;           //
 gainNode3B.gain.value = 0.19;           // No Delay entities
@@ -155,14 +108,8 @@ gainNode3C.gain.value = 0.12;
 gainNode4.gain.value = 0.22;
 gainNode5.gain.value = 0.15;            // Quieter Entities
 
-//delays.gain.value = 0.001;
-
-//wet1.gain.value = 1;
-//dry1.gain.value = 1;
 masterWet.gain.value = 0.2;
 masterDry.gain.value = 1;
-//masterDryDelay.gain.value = 0.7;
-
 
 // Individual Planet Channels
 planet1gain.gain.value = 0.0;
@@ -186,8 +133,6 @@ feedback.gain.value = 0.6;              // FEEDBACK AMOUNT
 filterD.frequency.value = 3000;         // DELAY FEEDBACK FILTER
 
 ///////////////////////////////////////////////////
-
 masterChannel.connect(compressor);              //  Main Mix > Compressor
 compressor.connect(audioContext.destination);   //  Compressor > Speakers
-
-//masterChannel.connect(audioContext.destination); //  CONNECT OUTPUT TO SPEAKERS
+/////////////////////////////////////////////////

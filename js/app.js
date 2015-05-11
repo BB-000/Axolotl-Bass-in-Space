@@ -1,5 +1,5 @@
 /**
- * Created by Barnabeeeeee on 06/04/15.
+ * Created by Barnabeeeeee on 06/02/15.
  */
 
 var requestAnimFrame = (function () {
@@ -876,9 +876,7 @@ function updateEntities(dt) {
         var planet = planets[x];
         planet.update();
         planet.playLoop();
-        //planet.render();
         collide(hero, planet, true);
-        //circleCollide(planet, hero);
         for (var x in monsters) {
             var monster = monsters[x];
             collide(monster, planet, true);
@@ -907,7 +905,6 @@ function cameraFollow() {
 var collide = function (obj1, obj2, separate, callback) {
 
     var colliding;
-
         if (obj1.x > obj2.x + obj2.width ||
             obj1.x + obj1.width < obj2.x ||
             obj1.y > obj2.y + obj2.height ||
@@ -1025,14 +1022,11 @@ function initStats() {
     lowpassFilter.frequency.value = 20000;
     lowpassFilter2.frequency.value = 20000;
 
-    //bulletpiercePower = false;
-
     gun = 0;
     current16thNote = 0;
     current64thNote = 0;
     barNumber = 0;
     barNumberL = 0;
-    barCount = 0;
     bar4Number = 0;
     bar16Number = 0;
     gameTime = 0;

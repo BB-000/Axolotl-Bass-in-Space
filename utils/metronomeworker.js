@@ -5,12 +5,12 @@ function tickBack() {           // share callback for timer
     postMessage("tick");
 }
 
-function startTimer() {             // centralize start method
-    stopTimer();                    // can be called with no consequence even if id=null
+function startTimer() {             //
+    stopTimer();                    // can be called with no consequence
     timerID = setInterval(tickBack, interval);
 }
 
-function stopTimer() {              // centralize stop method
+function stopTimer() {              //
     console.log("stopping");
     clearInterval(timerID);
     timerID = null;
@@ -27,7 +27,6 @@ self.onmessage = function(e){
     }
     else if (e.data.interval) {
         interval = e.data.interval;
-
 
         if (timerID !== null) {
             startTimer();

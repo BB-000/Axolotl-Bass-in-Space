@@ -1,4 +1,3 @@
-//(function() {
 var bullets = [];
 
 var sharkShoot = false;
@@ -9,18 +8,6 @@ var wizardShoot = false;
 var wizardgreenShoot = false;
 var jellypurpleShoot = false;
 var masterblasterShoot = false;
-
-//var planet1play = true;
-//var planet2play = true;
-//var planet3play = true;
-//var planet4play = true;
-//var planet5play = true;
-//var planet6play = true;
-//var planet7play = true;
-//var planet8play = true;
-//var planet9play = true;
-//var planet10play = true;
-//var planet11play = true;
 
 var fishPlay = false;
 var sharkPlay = false;
@@ -39,13 +26,6 @@ var wizardPlay = false;
 var wizardgreenPlay = false;
 var jellypurplePlay = false;
 var masterblasterPlay = false;
-
-//function PowerUp() {}
-//PowerUp.prototype = {
-//
-//
-//
-//}
 
 function Npc() {
 }
@@ -90,41 +70,31 @@ Npc.prototype = {
                     hero.health -= that.damage;
                     that.isDead = true;
                     xhealth.innerHTML = ("Space Health: " + hero.health);
-                    //console.log("damage"+this.damage);
-                    //console.log(collides);
                 }
             });
         }
 
-        //       ******  DEAD ENEMIES STACK  *******        //             //        ******  DEAD ENEMIES STACK  *******        //             //        ******  DEAD ENEMIES STACK  *******        //
+        //       ******  DEAD ENEMIES STACK  *******        //
         else if (this.isDead === true) {
             if (window[this.flag] === false) {
-                //window[this.flag] = true;
-                //console.log(window[this.flag]);
-                //if (barNumber % this.barTiming === 0) {
-                //    if (current16thNote % this.timing === 0) {
-                if (this.timing()) {
+                if (this.timing()) {                                                                                    // Wait for cue...
                     this.toRemove = true;
 
                     if (this.isPowerUp) {
-                        this.powerUp();
-                        //document.getElementById("xpowerup").innerHtml = powerupText;
+                        this.powerUp();                                                                                 // Apply powerup if powerup
                     }
                     if (gameOver === false) {
                         score += this.points;
                         xscore.innerHTML = ("Space Cash: " + score);
-                        window[this.flag] = true;
+                        window[this.flag] = true;                                                                       // Stop other duplicate sounds
                         if (this.isPowerDrop) {
-                            var power = new HealthUp(this.x, this.y);
+                            var power = new HealthUp(this.x, this.y);                                                   // Drop Health?
                             monsters.push(power);
                         }
-                        //console.log("" + fishPlay);
                         setTimeout(function () {
-                            window[that.flag] = false;
+                            window[that.flag] = false;                                                                  // Set same entities ready to play
                         }, 200);
-                        //console.log(fishPlay);
-                        //this.resetToken();
-                        //console.log(fishPlay);
+
                         if (this.fx === "delay") {
                             playSoundDelay(samplebb[this.sound], this.channel);
                         } else {
@@ -132,63 +102,25 @@ Npc.prototype = {
                         }
                     }
                 }
-
             }
 
             if (this.shooter) {
-                window[this.token] = false;
+                window[this.token] = false;                                                                             // Stop shootsound if dead
             }
         }
-
-        /////       ******   DEAD ENEMIES DON'T STACK    **********        ///     ///       ******   DEAD ENEMIES DON'T STACK    **********        ///    ///       ******   DEAD ENEMIES DON'T STACK    **********        ///
-        //else if (this.isDead) {
-        //    if (barNumber % this.barTiming === 0) {
-        //        if (current16thNote % this.timing === 0) {
-        //            //var index = monsters.indexOf(this);
-        //            //monsters.splice(index, 1);
-        //
-        //            this.toRemove = true;
-        //            //samplebb[this.sound].ready = false;
-        //
-        //            if (gameOver === false) {
-        //                score += this.points;
-        //                console.log("" + fishPlay);
-        //
-        //
-        //                console.log(window[this.flag]);
-        //                //this.resetToken();
-        //                //console.log(fishPlay);
-        //                if (window[this.flag] === false) {
-        //                    window[this.flag] = true;
-        //                    if (this.fx === "delay") {
-        //                        playSoundDelay(samplebb[this.sound], this.channel);
-        //                    } else {
-        //                        playSound(samplebb[this.sound], this.channel);
-        //                    }
-        //
-        //                    setTimeout(function () {
-        //                        window[that.flag] = false;
-        //                    }, 100);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
     },
 
     render: function (ctx) {
         if (this.isDead === false) {
-            //ctx.imageSmoothingEnabled = false;
-            ctx.mozImageSmoothingEnabled = false;
+            ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
             ctx.webkitImageSmoothingEnabled = false;
             ctx.msImageSmoothingEnabled = false;
             ctx.imageSmoothingEnabled = false;
-            //ctx.webkitimageSmoothingEnabled = false;
+
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
         } else if (this.isDead === true) {
             ctx.save();
-            ctx.globalAlpha = 0.4;
+            ctx.globalAlpha = 0.4;                                                                                      // Translucify Dead aliens
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
             ctx.restore();
         }
@@ -196,80 +128,16 @@ Npc.prototype = {
 
     getFlock: function () {
         return this.flockSize;
-    },
-
-    resetToken: function () {
-
-        window[this.flag] = false;
     }
 
-    //shoot: function () {
-    //
-    //    if (this.shooter === true) {
-    //        var bullet = new Bullet(this.x, this.y, 1, "enemy");
-    //        var vector = {x: hero.x - (this.x + 16), y: hero.y - (this.y + 16)};
-    //        vector.length = Math.sqrt(vector.x * tector.x + vector.y * vector.y);
-    //        bullet.velocity = [(vector.x / vector.length) * this.bbspeed, (vector.y / vector.length) * this.bbspeed];
-    //        bullet.angle = Math.atan2(vector.y / vector.length, vector.x / vector.length);
-    //        bullets.push(bullet);
-    //
-    //        this.playing = true;
-    //        //sharkShoot = true;
-    //
-    //
-    //        //function resset(){
-    //        //    this.playing = true;
-    //        //}
-    //
-    //        //if(this.playing === false) {
-    //        //    this.playing = true;
-    //        //    playSound(samplebb[this.shootSound], this.channel);
-    //        //} else if(this.playing === true){
-    //        //    setTimeout(this.resset(), 100);
-    //        //}
-    //
-    //        //    }
-    //        //}
-    //    }
-    //}
-};
 
-//function MonsterMove() {}
-//MonsterMove.prototype = Object.create(Npc.prototype);
-//MonsterMove.prototype.move = function () {
-//    if (this.health >= 0) {
-//        // Vector between the monster and the player
-//        var monstervector = {
-//            x: Math.round(this.x - hero.x),
-//            y: Math.round(this.y - hero.y)
-//        };
-//        // Length of the vector
-//        monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));
-//
-//        if (monstervector.length < 10 && this.follow === true) {
-//            // Run after the player!
-//            this.x -= Math.round((monstervector.x / monstervector.length) * 2);
-//            this.y -= Math.round((monstervector.y / monstervector.length) * 2);
-//        } else if (monstervector.length > 10 && !(monstervector.length > this.test) && this.follow === true) {
-//            this.x -= Math.round((monstervector.x / monstervector.length) * 1);
-//            this.y -= Math.round((monstervector.y / monstervector.length) * 1);
-//        }
-//    }
-//};
+};
 
 function MonsterChase() {
 }
 MonsterChase.prototype = Object.create(Npc.prototype);
 MonsterChase.prototype.move = function (dt) {
 
-    //var monstervector = {
-    //    x: Math.round(this.x - hero.x),
-    //    y: Math.round(this.y - hero.y)
-    //};
-    //monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
-
-    this.friction = 0.9;
-    //console.log(monstervector.length);
     this.UpdateAngle = function () {
         this.dx = hero.x - this.x;
         this.dy = hero.y - this.y;
@@ -279,10 +147,6 @@ MonsterChase.prototype.move = function (dt) {
     this.UpdateSpeed = function () {
         this.speedX = this.speed * (this.dx / this.distance);
         this.speedY = this.speed * (this.dy / this.distance);
-        this.speedY *= this.friction;
-        //this.y += this.speedY;
-        this.speedX *= this.friction;
-        //this.x += this.speedX;
     };
     this.move = function () {
         this.UpdateAngle();
@@ -290,21 +154,12 @@ MonsterChase.prototype.move = function (dt) {
         this.x += this.speedX * dt * speedMod;
         this.y += this.speedY * dt * speedMod;
     };
-
-
 };
 
 function MonsterRun() {
 }
 MonsterRun.prototype = Object.create(Npc.prototype);
 MonsterRun.prototype.move = function (dt) {
-
-    //var monstervector = {
-    //    x: Math.round(this.x - hero.x),
-    //    y: Math.round(this.y - hero.y)
-    //};
-    //monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
-    //console.log(monstervector.length);
 
     this.UpdateAngle = function () {
         this.dx = hero.x - this.x;
@@ -340,10 +195,6 @@ function MonsterShoot() {
 MonsterShoot.prototype = Object.create(MonsterChase.prototype);
 MonsterShoot.prototype.shoot = function () {
 
-    //var playerdist = {x: this.x - (hero.x + 20), y: this.y - (hero.y + 20)};
-    //playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
-
-    //if (this.shooter === true) {
     var monstervector = {x: Math.round(this.x - hero.x), y: Math.round(this.y - hero.y)};
     monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));  // Length of the vector
 
@@ -356,10 +207,6 @@ MonsterShoot.prototype.shoot = function () {
         bullets.push(bullet);
         //console.log("shot!!");
     }
-
-    //this.playing = true;
-
-    //}
 };
 
 
@@ -377,16 +224,13 @@ MonsterFly.prototype.move = function (dt) {
     playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
 
     if (playerdist.length > 6000) {
-        //var index = monsters.indexOf(this);
         this.toRemove = true;
-        //monsters.splice(index, 1);
     }
 };
 
 //Prawn.prototype = Object.create(Npc.prototype);
 
 var Fish = function (position) {
-
     this.x = position.x;
     this.y = position.y;
     this.width = 32;
@@ -397,22 +241,14 @@ var Fish = function (position) {
     this.speed = Math.random() * (190 - 70) + 70;
     this.sizex = 32;
     this.sizey = 32;
-    //?
-    //this.monsterImage = new Image();
     this.monsterImage = 'images/Fish.png';
-    //this.shooter = true,
-    //    this.bulletTiming = 2,
-    //?
     this.sound = Math.floor((Math.random() * 2) + 19);
-    //this.shootSound = 0;
-    //this.timing = 4;
-    this.timing = function () {
-        return !!current16thNote % 4 === 0;
-    }
     this.flockSize = 5;
     this.flag = "fishPlay";
-    //this.resolution = bar4Number;
     this.channel = gainNode3E;
+    this.timing = function () {
+        return !!current16thNote % 4 === 0;
+    };
 
 };
 Fish.prototype = Object.create(MonsterChase.prototype);
@@ -428,23 +264,19 @@ var Beetle = function (position) {
     this.speed = Math.random() * (150 - 100) + 100;
     this.sizex = 25;
     this.sizey = 24;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/BeetleBlue.png";
     this.sound = 17;
     this.timing = 16;
-    this.timing = function () {
-        return !!(current16thNote % 16 === 0);
-    }
     this.flag = "wormPlay";
     this.flockSize = 3;
-
-
+    this.timing = function () {
+        return !!current16thNote % 16 === 0;
+    };
 };
 Beetle.prototype = Object.create(MonsterChase.prototype);
 
 
 var Prawn = function (position) {
-
     this.x = position.x;
     this.y = position.y;
     this.width = 32;
@@ -455,27 +287,21 @@ var Prawn = function (position) {
     this.speed = Math.random() * (220 - 180) + 180;
     this.sizex = 32;
     this.sizey = 32;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/Prawn.png";
     this.sound = 83;
-    //this.timing = 3;
-    this.timing = function () {
-        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
     this.flockSize = 3;
     this.flag = "prawnPlay";
     this.fx = "none";
     this.channel = gainNode3B;
-
-
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    };
 };
 Prawn.prototype = Object.create(MonsterChase.prototype);
 
 
 var Bug = function (position) {
-
     var xx = Math.floor(Math.random() * (82 - 12 + 1) + 12);
-    //var yy = Math.floor(Math.random() * (6 - 5 + 1) + 5);
     this.x = position.x;
     this.y = position.y;
     this.width = xx;
@@ -486,16 +312,8 @@ var Bug = function (position) {
     this.speed = Math.floor(Math.random() * (180 - 100 + 1) + 100);
     this.sizex = xx;
     this.sizey = xx;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/PrawnYellow.png";
     this.sound = rand(5, 7);
-    this.shootSound = 24;
-
-    //this.timing = 1;
-    this.timing = function () {
-        return !!current16thNote % 1 === 0;
-    }
-    //this.token = "eel";
     this.name = "bug";
     this.shooter = true;
     this.bbspeed = 5;
@@ -504,8 +322,8 @@ var Bug = function (position) {
     this.flockSize = 4;
     this.flag = "bugPlay";
     this.token = "bugShoot";
-    this.shootTiming = function () {
-        return !!(barNumber % 2 === 0 && current16thNote === 0);
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
     };
     this.shootRhythm = function () {
         if (barNumberL === 0 || barNumberL === 2) {
@@ -526,7 +344,6 @@ Bug.prototype = Object.create(MonsterShoot.prototype);
 
 
 var Shark = function (position) {
-
     this.x = position.x;
     this.y = position.y;
     this.width = 64;
@@ -543,18 +360,13 @@ var Shark = function (position) {
     this.token = "sharkShoot";
     this.name = "shark";
     this.sound = 14;
-    this.shootSound = 25;
-    //this.timing = 16;
-    this.timing = function () {
-        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
     this.bbspeed = 8;
     this.bbDamage = 50;
     this.bbType = "enemy1";
     this.flockSize = 1;
     this.flag = "sharkPlay";
-    this.shootTiming = function () {
-        return !!(current16thNote === 4 || current16thNote === 12);
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
     };
     this.shootRhythm = function () {
         return !!(current16thNote === 4 || current16thNote === 12);
@@ -580,19 +392,16 @@ var JellyOrange = function (position) {
     this.monsterImage = "images/JellyOrange.png";
     this.token = "jellyShoot";
     this.sound = 30;
-    //this.timing = 16;
-    //this.barTiming = 4;
-    this.timing = function () {
-        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
     this.bbspeed = 6;
     this.bbDamage = 25;
     this.bbType = "enemy2";
     this.flockSize = 2;
     this.flag = "jellyorangePlay";
     this.channel = gainNode5;
+    this.timing = function () {
+        return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
+    };
     this.shootRhythm = function () {
-
         return !!((bar4Number % 2 === 0) && (current64thNote === 29 || current64thNote === 30 || current64thNote === 31 || current64thNote === 32 || current64thNote === 33 ||
         current64thNote === 34 || current64thNote === 36 || current64thNote === 36 || current64thNote === 38 || current64thNote === 39 || current64thNote === 40 ||
         current64thNote === 41 || current64thNote === 42 || current64thNote === 43 || current64thNote === 45 || current64thNote === 47));
@@ -602,9 +411,6 @@ JellyOrange.prototype = Object.create(MonsterShoot.prototype);
 
 
 var Mosquito = function (position) {
-
-    //var choose = ["images/Mosquito.png", "images/Mosquito2.png"];
-
     this.x = position.x;
     this.y = position.y;
     this.width = 16;
@@ -615,26 +421,18 @@ var Mosquito = function (position) {
     this.speed = rand(220, 280);
     this.sizex = 16;
     this.sizey = 16;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/Mosquito.png";
-
-    //this.timing = 1;
-    this.timing = function () {
-        return !!current16thNote % 1 === 0;
-    }
     this.sound = 13;
     this.flag = "mosquitoPlay";
     this.flockSize = 6;
-
-
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    };
 };
 Mosquito.prototype = Object.create(MonsterChase.prototype);
 
 
 var Mosquito2 = function (position) {
-
-    //var choose = ["images/Mosquito.png", "images/Mosquito2.png"];
-
     this.x = position.x;
     this.y = position.y;
     this.width = 32;
@@ -645,9 +443,7 @@ var Mosquito2 = function (position) {
     this.speed = rand(250, 270);
     this.sizex = 32;
     this.sizey = 32;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/Mosquito2.png";
-    //this.timing = 1;
     this.timing = function () {
         return !!current16thNote % 2 === 0;
     };
@@ -655,7 +451,6 @@ var Mosquito2 = function (position) {
     this.flag = "mosquito2Play";
     this.flockSize = 4;
     this.channel = gainNode3E;
-
 
 };
 Mosquito2.prototype = Object.create(MonsterChase.prototype);
@@ -677,11 +472,9 @@ var JellyGreen = function (position) {
     this.monsterImage = "images/JellyGreen.png";
     this.token = "jellygreenShoot";
     this.sound = 70;
-    //this.timing = 16;
-    //this.barTiming = 4;
     this.timing = function () {
         return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
+    };
     this.bbspeed = 9;
     this.bbDamage = 50;
     this.bbType = "enemy1";
@@ -689,7 +482,6 @@ var JellyGreen = function (position) {
     this.flag = "jellygreenPlay";
     this.channel = gainNode5;
     this.isPowerDrop = true;
-
     this.shootRhythm = function () {
         return !!((barNumberL === 0 || barNumberL === 1) && (current16thNote === 5));
     };
@@ -713,18 +505,15 @@ var JellyPurple = function (position) {
     this.monsterImage = "images/JellyPurple.png";
     this.token = "jellypurpleShoot";
     this.sound = 75;
-    //this.timing = 16;
-    //this.barTiming = 4;
     this.timing = function () {
         return !!current16thNote % 16 === 0;
-    }
+    };
     this.bbspeed = 6;
     this.bbDamage = 30;
     this.bbType = "enemy1";
     this.flockSize = 5;
     this.flag = "jellypurplePlay";
     this.channel = gainNode3D;
-
     this.shootRhythm = function () {
         return !!((barNumberL === 0 || barNumberL === 1) && (current64thNote < 32 && current64thNote % 4 === 0));
     };
@@ -748,11 +537,9 @@ var Wizard = function (position) {
     this.monsterImage = "images/Wizard.png";
     this.token = "wizardShoot";
     this.sound = 69;
-    //this.timing = 16;
-    //this.barTiming = 4;
     this.timing = function () {
         return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
+    };
     this.bbspeed = 6;
     this.bbDamage = 50;
     this.bbType = "enemy1";
@@ -784,11 +571,9 @@ var WizardGreen = function (position) {
     this.monsterImage = "images/WizardGreen.png";
     this.token = "wizardgreenShoot";
     this.sound = 85;
-    //this.timing = 16;
-    //this.barTiming = 4;
     this.timing = function () {
         return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
+    };
     this.bbspeed = 9;
     this.bbDamage = 50;
     this.bbType = "enemy2";
@@ -797,7 +582,6 @@ var WizardGreen = function (position) {
     this.flag = "wizardgreenPlay";
     this.channel = gainNode3B;
     this.isPowerDrop = true;
-
     this.shootRhythm = function () {
         return !!((bar4Number % 4 === 0) && (barNumberL === 0 || barNumberL === 1));
     };
@@ -806,7 +590,6 @@ WizardGreen.prototype = Object.create(MonsterShoot.prototype);
 
 
 var MasterBlaster = function (position) {
-
     this.x = position.x;
     this.y = position.y;
     this.width = 64;
@@ -822,11 +605,9 @@ var MasterBlaster = function (position) {
     this.monsterImage = "images/MasterBlaster.png";
     this.token = "masterblasterShoot";
     this.sound = 84;
-    //this.timing = 16;
-    //this.barTiming = 4;
     this.timing = function () {
         return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
+    };
     this.bbspeed = 4;
     this.bbDamage = 25;
     this.bbType = "enemy2";
@@ -841,7 +622,6 @@ MasterBlaster.prototype = Object.create(MonsterShoot.prototype);
 
 
 var Boulder = function (position) {
-
     var xx = Math.random() * (112 - 16) + 16;
     this.x = position.x;
     this.y = position.y;
@@ -851,12 +631,9 @@ var Boulder = function (position) {
     this.damage = 20;
     this.points = 1;
     this.speed = Math.random() * (4 - 1) + 1;
-    //this.speed = 200;
     this.sizex = xx;
     this.sizey = xx;
-    //this.monsterImage = new Image();
     this.monsterImage = "images/Boulder.png";
-    //this.timing = 1;
     this.timing = function () {
         return !!current16thNote % 1 === 0;
     };
@@ -865,7 +642,6 @@ var Boulder = function (position) {
 };
 Boulder.prototype = Object.create(MonsterFly.prototype);
 
-//var monsterz = [Fish, Beetle, Prawn, Bug, Shark, Mosquito];
 
 function Planet() {
 }
@@ -884,9 +660,6 @@ Planet.prototype = {
     width: 128,
     planetDice: false,
     loop: true,
-
-    //xcenter: this.x + (this.width / 2),
-    //ycenter: this.y + (this.height / 2),
 
     update: function () {
 
@@ -927,12 +700,10 @@ Planet.prototype = {
         return this.y + this.height / 2;
     }
 
-
 };
 
 
-function PlanetPlay() {
-}
+function PlanetPlay() {}
 PlanetPlay.prototype = Object.create(Planet.prototype);
 PlanetPlay.prototype.playLoop = function () {
 
@@ -941,15 +712,12 @@ PlanetPlay.prototype.playLoop = function () {
     var monstervector = {x: Math.round(this.x - hero.x), y: Math.round(this.y - hero.y)};
     monstervector.length = Math.sqrt((monstervector.x * monstervector.x) + (monstervector.y * monstervector.y));
 
-    //console.log(monstervector.length);
     if (monstervector.length > 1500) {
         that.channel.gain.value = 0;
     } else if (monstervector.length < 1500 && monstervector.length > 500) {
         that.channel.gain.value = map_range(monstervector.length, 500, 1500, this.midGain, 0);
-        //console.log(planet1gain.gain.value);
     } else if (monstervector.length < 500) {
         that.channel.gain.value = map_range(monstervector.length, 0, 500, this.maxGain, this.midGain);
-        //console.log(planet1gain.gain.value);
     }
 };
 
@@ -971,7 +739,6 @@ PlanetFilter.prototype.playLoop = function () {
     } else if (monstervector.length < 400) {
         lowpassFilter.frequency.value = map_range(monstervector.length, 0, 400, 0, 5000);
         lowpassFilter2.frequency.value = map_range(monstervector.length, 0, 400, 0, 5000);
-        //console.log("lps: " + lowpassFilter.frequency.value);
     }
 };
 
@@ -983,11 +750,6 @@ var BlackHole = function () {
     this.width = 64;
     this.height = 64;
     this.radius = 32;
-    //this.sound = 26;
-    //this.timing = 8;
-    //this.maxGain = 0.17;
-    //this.midGain = 0.05;
-    //this.channel = planet1gain;
 };
 BlackHole.prototype = Object.create(PlanetFilter.prototype);
 
@@ -1168,59 +930,6 @@ var Planet14 = function () {
 Planet14.prototype = Object.create(PlanetPlay.prototype);
 
 
-//function Powerup() {
-//}
-//Powerup.prototype = {
-//
-//    isDead: false,
-//    fx: "delay",
-//
-//    update: function () {
-//
-//        var that = this;
-//
-//        if (this.health <= 0) {
-//            this.isDead = true;
-//        }
-//
-//        if (this.isDead === false) {
-//
-//            collide(hero, this, true, function (collides) {
-//                if (collides === true) {
-//                    that.powerUp();
-//                    that.isDead = true;
-//                }
-//            });
-//        }
-//
-//        if (barNumber % this.barTiming === 0)
-//            if (current16thNote % this.timing === 0) {
-//                score += this.points;
-//                var index = powers.indexOf(this);
-//                powers.splice(index, 1);
-//                //this.toRemove = true;
-//                //samplebb[this.sound].ready = false;
-//                if (this.fx === "delay") {
-//                    playSoundDelay(samplebb[this.sound], this.channel);
-//                } else {
-//                    playSound(samplebb[this.sound], this.channel);
-//                }
-//            }
-//
-//    },
-//
-//    render: function (ctx) {
-//        if (this.isDead === false) {
-//            ctx.drawImage(resources.get(this.powerImage), this.x, this.y, this.sizex, this.sizey);
-//        } else if (this.isDead === true) {
-//            ctx.save();
-//            ctx.globalAlpha = 0.4;
-//            ctx.drawImage(resources.get(this.powerImage), this.x, this.y, this.sizex, this.sizey);
-//            ctx.restore();
-//        }
-//    }
-//
-//};
 
 var HealthUp = function (x, y) {
     this.x = x;
@@ -1235,12 +944,11 @@ var HealthUp = function (x, y) {
     this.sizey = 32;
     this.monsterImage = "images/HeartGreen.png";
     this.sound = 17;
-    //this.timing = 1;
-    this.timing = function () {
-        return !!current16thNote % 1 === 0;
-    }
     this.flag = "healthUpPlay";
     this.isPowerUp = true;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    };
     this.powerUp = function () {
         hero.health += 100;
         xhealth.innerHTML = ("Space Health:  " + hero.health);
@@ -1262,12 +970,11 @@ var HealthFlyUp = function (position) {
     this.sizey = 32;
     this.monsterImage = "images/HeartGreenEyes.png";
     this.sound = 17;
-    //this.timing = 1;
-    this.timing = function () {
-        return !!(current16thNote % 1 === 0);
-    }
     this.flag = "healthUpPlay";
     this.isPowerUp = true;
+    this.timing = function () {
+        return !!current16thNote % 1 === 0;
+    };
     this.powerUp = function () {
         hero.health += 100;
         xhealth.innerHTML = ("Space Health:  " + hero.health);
@@ -1289,17 +996,14 @@ var GunUp = function (position) {
     this.sizey = 24;
     this.monsterImage = "images/Potion3.png";
     this.sound = 17;
-    //this.barTiming = 4;
-    //this.timing = 16;
     this.timing = function () {
         return !!(barNumber % 4 === 0 && current16thNote % 16 === 0);
-    }
+    };
     this.flag = "gunUpPlay";
     this.isPowerUp = true;
     this.powerUp = function () {
         if (gun < 2) {
             gun += 1;
-            //document.getElementById("xpowerup").innerHTML = "Bassline Upgrade!!";
             xpowerup.innerHTML = "Bassline Upgrade!!";
             setTimeout(function () {
                 powerupText = "";
@@ -1311,7 +1015,6 @@ var GunUp = function (position) {
             powerupText = "Bullet Damage Up!!";
             xpowerup.innerHtml = "Bullet Damage Up!!!";
             setTimeout(function () {
-                //powerupText = "";
                 xpowerup.innerHtml = "";
             }, 3000);
         }
@@ -1333,11 +1036,9 @@ var SlowPotion = function (position) {
     this.sizey = 24;
     this.monsterImage = "images/Potion2.png";
     this.sound = 17;
-    //this.barTiming = 4;
-    //this.timing = 16;
     this.timing = function () {
         return !!current16thNote % 1 === 0;
-    }
+    };
     this.flag = "slowPotionPlay";
     this.isPowerUp = true;
     this.powerUp = function () {
@@ -1360,17 +1061,11 @@ SlowPotion.prototype = Object.create(MonsterRun.prototype);
 var Bullet = function (x, y, damage, type) {
 
     this.damage = typeof damage !== 'undefined' ? damage : 10;
-    //this.damage += bulletDamageMod;
     this.x = x;
     this.y = y;
     this.velocity = [0, 0];
     this.angle = 0;
     this.type = typeof type !== 'undefined' ? type : "hero";
-    //this.type = "spear",
-    //this.speed = 1000
-    //this.eX = eX,
-    //this.eY = eY
-    //this.damage = damage
 };
 
 Bullet.prototype = {
@@ -1406,8 +1101,6 @@ Bullet.prototype = {
 
         if (this.type !== "hero") {
             var collides1;
-            //var index = bullets.indexOf(this);
-
 
             if (
                 this.x > hero.x + hero.width ||
@@ -1432,26 +1125,6 @@ Bullet.prototype = {
             for (var y = 0, m = monsters.length; y < m; ++y) {
                 var monst = monsters[y];
                 if (!monst.isPowerUp) {
-                    //var collides;
-                    //if (
-                    //    this.x > monst.x + monst.width ||
-                    //    this.x + monst.width / 2 < monst.x ||
-                    //    this.y > monst.y + monst.height ||
-                    //    this.y + monst.height / 2 < monst.y
-                    //) {
-                    //    collides = false;
-                    //} else {
-                    //    collides = true;
-                    //}
-                    //if (collides === true && monst.isDead === false) {
-                    //    monst.health -= this.damage + bulletDamageMod;
-                    //    //console.log("bullet damage : : : " + this.damage);
-                    //    //var index = bullets.indexOf(this);
-                    //    if (bulletpiercePower === false) {
-                    //        bullets.splice(index, 1);
-                    //    }
-                    //}
-
                     if (!monst.isDead) {
                         collide(this, monst, true, function (collides) {
                             if (collides === true) {
@@ -1466,17 +1139,13 @@ Bullet.prototype = {
                 }
             }
         }
-        //setTimeout(function(){ bullets.splice(index, 1); }, 3000);
-
         var playerdist = {x: this.x - hero.x, y: this.y - hero.y};
         playerdist.length = Math.sqrt((playerdist.x * playerdist.x) + (playerdist.y * playerdist.y));
         // BULLET DISAPPEAR WHEN FAR AWAY
         if (playerdist.length > 1000) {
-            //var index = bullets.indexOf(this);
             bullets.splice(index, 1);
         }
-    }
-    ,
+    },
 
     render: function () {
         ctx.save();
@@ -1494,8 +1163,6 @@ Bullet.prototype = {
     }
 }
 
-
-// Game objects
 var hero = {
     x: 2196,
     y: 3328,
