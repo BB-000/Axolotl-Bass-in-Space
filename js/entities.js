@@ -108,6 +108,42 @@ Npc.prototype = {
                 window[this.token] = false;                                                                             // Stop shootsound if dead
             }
         }
+
+        -        /////       ******   DEAD ENEMIES DON'T STACK    **********        ///     ///       ******   DEAD ENEMIES DON'T STACK    **********        ///    ///       ******   DEAD ENEMIES DON'T STACK    **********        ///
+-        //else if (this.isDead) {
+-        //    if (barNumber % this.barTiming === 0) {
+-        //        if (current16thNote % this.timing === 0) {
+-        //            //var index = monsters.indexOf(this);
+-        //            //monsters.splice(index, 1);
+-        //
+-        //            this.toRemove = true;
+-        //            //samplebb[this.sound].ready = false;
+-        //
+-        //            if (gameOver === false) {
+-        //                score += this.points;
+-        //                console.log("" + fishPlay);
+-        //
+-        //
+-        //                console.log(window[this.flag]);
+-        //                //this.resetToken();
+-        //                //console.log(fishPlay);
+-        //                if (window[this.flag] === false) {
+-        //                    window[this.flag] = true;
+-        //                    if (this.fx === "delay") {
+-        //                        playSoundDelay(samplebb[this.sound], this.channel);
+-        //                    } else {
+-        //                        playSound(samplebb[this.sound], this.channel);
+-        //                    }
+-        //
+-        //                    setTimeout(function () {
+-        //                        window[that.flag] = false;
+-        //                    }, 100);
+-        //                }
+-        //            }
+-        //        }
+-        //    }
+-        //}
+-
     },
 
     render: function (ctx) {
@@ -190,8 +226,7 @@ MonsterRun.prototype.move = function (dt) {
 };
 
 
-function MonsterShoot() {
-}
+function MonsterShoot() {}
 MonsterShoot.prototype = Object.create(MonsterChase.prototype);
 MonsterShoot.prototype.shoot = function () {
 
@@ -210,8 +245,7 @@ MonsterShoot.prototype.shoot = function () {
 };
 
 
-function MonsterFly() {
-}
+function MonsterFly() {}
 MonsterFly.prototype = Object.create(Npc.prototype);
 MonsterFly.prototype.move = function (dt) {
 
