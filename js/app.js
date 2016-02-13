@@ -24,7 +24,7 @@ canvas.oncontextmenu = function () {                                            
     return false;
 }
 
-var xdiv = document.createElement("div");
+var xdiv = document.createElement("div");                                                                               // Create DOM Elements + Canvas...
 var overlay = document.createElement("div");
 var xscore = document.createElement("div");
 var xhealth = document.createElement("div");
@@ -46,7 +46,7 @@ pausetext.id = "pausetext";
 pausetext.innerHTML = "";
 volume.id = "controlz";
 volume.innerHTML = ("<p>Volume<input id='gainSlider' type='range' min='0' max='1' step='0.05' value='1' oninput='updateVolume(this.value)'/></input></p>");
-
+// Volumeometer
 document.body.appendChild(xdiv);                                                                                        // Wrapper for canvas and overlay
 xdiv.appendChild(canvas);                                                                                               // Add canvas and overlay to page
 xdiv.appendChild(overlay);
@@ -102,7 +102,7 @@ function init() {
         }
     });
 
-    window.addEventListener("keyup", function (e) {
+    window.addEventListener("keyup", function (e) {                                                                        // Stop shooting
         if ( e.keyCode === 32 ) {
             shootx = false;
         }
@@ -153,7 +153,7 @@ function init() {
         return null;
     }
 
-// Get Browser Specific Hidden Property
+// Get Browser Specific Hidden Property  -- This code finds out if the tab is active or not
     function hiddenProperty(prefix) {
         if (prefix) {
             return prefix + 'Hidden';
@@ -214,6 +214,7 @@ function init() {
     main();                                                                                                             // Call main game loop!
 }
 
+// Load all images, once done call init()
 resources.load([
     'images/startscreenload.png',
     'images/startscreen.png',
@@ -265,22 +266,18 @@ resources.load([
 ]);
 resources.onReady(init);
 
+// Various game variables, objects, arrays.
 var monsters = [];
 var planets = [];
 
 var bulletX;
 var bulletY;
 
-//var bulletpiercePower = false; //*
-
 var paused = false;
 var state = "startmenu";
-//var then;
 var score = 0;
 var ctx;
-//var spawnN = 0;
 var shootx = false;
-//var play1 = false;1
 var gun = 0;                                                                                                            // Weapon number
 var gameTime = 0;
 var gameOver = false;
@@ -289,7 +286,6 @@ var readyforblastoff = false;
 var keysDown = {};                                                                                                      // object holding keys pressed
 var camera = {x: hero.x - canvas.width / 2, y: hero.y - canvas.height / 2};                                             // Viewpowt position
 
-//var bulletSizeMod = 0;
 var bulletDamageMod = 0;
 var speedMod = 1;
 
@@ -304,7 +300,6 @@ var rand = function (min, max) {
 
 
 function loadSounds() {
-//		soundContext = new AudioContext();
     bufferLoader = new BufferLoader(audioContext,
         [
             ['sounds/1-KICK.mp3', 'sounds/1-KICK.ogg'],      //0
@@ -317,7 +312,7 @@ function loadSounds() {
             ['sounds/conga3.wav', 'sounds/conga3.ogg'],   //7
             ['sounds/hat1.wav', 'sounds/hat1.ogg'],     //8
             ['sounds/9-TICK1.mp3', 'sounds/9-TICK1.ogg'],//9
-            ['sounds/10-AMBIENCE1.mp3', 'sounds/10-AMBIENCE1.ogg'],// 10   //  Planet
+            ['sounds/10-AMBIENCE1.mp3', 'sounds/10-AMBIENCE1.ogg'],// 10   //
             ['sounds/11-AMBIENCE2.mp3', 'sounds/11-AMBIENCE2.ogg'],    //11
             ['sounds/31-NPC-HAT.mp3', 'sounds/31-NPC-HAT.ogg'],      //12
             ['sounds/13-NPC-ZAP.wav', 'sounds/13-NPC-ZAP.ogg'],          //
@@ -403,7 +398,7 @@ function setNoteReady(obj) {
     obj.ready = true;
 }
 
-//////////////////////////////////////////////  !  i Must be size of Array!!  ******
+//////////////////////////////////////////////  Fill samplebb array with all sounds
 function finishedLoading(bufferList) {
     for (var i = 0, l = bufferList.length; i < l; i += 1) {
         var source = audioContext.createBufferSource();
@@ -415,10 +410,12 @@ function finishedLoading(bufferList) {
         };
         samplebb.push(note);
     }
-    readyforblastoff = true;
+    readyforblastoff = true;                                            // Set load screen to ready
 }
 
 
+
+// Various play methods - dry / wet
 function playSound(obj, channel) {
 
     var source = audioContext.createBufferSource();
@@ -503,7 +500,7 @@ function nextNote() {
     }
 }
 
-/////  ***  SCHEDULE EVERYTHING  ***
+/////  ***  SCHEDULE EVERYTHING!  ***
 function audioSchedule(beatNumber) {
     // push the note on the queue, even if we're not playing.
     //notesInQueue.push({note: beatNumber, time: time});
@@ -582,7 +579,7 @@ function audioSchedule(beatNumber) {
                     spawnMonster(1, HealthFlyUp);
                     spawnMonster(1, GunUp);
                     spawnMonster(1, SlowPotion);
-                    console.log("spawned Powers");
+                    //console.log("spawned Powers");
                 }
             }
 
@@ -593,7 +590,7 @@ function audioSchedule(beatNumber) {
                 monsta = null;
                 if (barNumber % 16 === 0) {
                     spawnMonster(1, GunUp);
-                    console.log("spawned Powers");
+                    //console.log("spawned Powers");
                     if (barNumber !== 0) {
                         spawnMonster(1, HealthFlyUp);
                     }
@@ -674,6 +671,7 @@ function scheduler() {
     }
 }
 
+// Starts main audio brain ticking
 function play() {
     var currentTime = audioContext.currentTime;
     isPlaying = !isPlaying;
@@ -688,7 +686,7 @@ function play() {
         return "play";
     }
 }
-
+// Used for user main Vol control
 function updateVolume(amt) {
     masterChannel.gain.value = amt;
 }
@@ -743,13 +741,7 @@ var shoot = function () {
 function map_range(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
-//var randomN = function (minimum, maximum, precision) {
-//    minimum = minimum === undefined ? 0 : minimum;
-//    maximum = maximum === undefined ? 9007199254740992 : maximum;
-//    precision = precision === undefined ? 0 : precision;
-//    var random = Math.random() * (maximum - minimum) + minimum;
-//    return parseFloat(random.toFixed(precision));
-//};
+
 var generateWeighedList = function (list, weight) {
     var weighed_list = [];
 
@@ -796,34 +788,8 @@ function handleInput(dt) {
     }
     if (27 in keysDown) {
         paused = !paused;
-        //play();
     }
 
-
-    //if (90 in keysDown) {
-    //    spawnMonster(1, WizardGreen);
-    //}
-    //if (88 in keysDown) {
-    //    spawnMonster(1, SlowPotion);
-    //}
-    //if (67 in keysDown) {
-    //    spawnMonster(1, WizardGreen);
-    //}
-    //if (86 in keysDown) {
-    //    spawnMonster(1, JellyGreen);
-    //}
-    //if (66 in keysDown) {
-    //    spawnMonster(1, Shark);
-    //}
-    //if (78 in keysDown) {
-    //    spawnMonster(1, Mosquito2);
-    //}
-    //if (77 in keysDown) {
-    //    spawnMonster(1, JellyOrange);
-    //}
-    //if (188 in keysDown) {
-    //    spawnMonster(1, Fish);
-    //}
     if (191 in keysDown) {
         console.log(monsters.length);
     }
@@ -868,7 +834,6 @@ function updateEntities(dt) {
         }
         if (monster.toRemove) {
             monsters.splice(x, 1);
-            //monster = null;
         }
     }
 
@@ -977,6 +942,7 @@ var reset = function () {
     }
 };
 
+// Reset everything
 function initStats() {
     play();
     setTimeout(play, 8000);
