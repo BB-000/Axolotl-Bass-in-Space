@@ -29,6 +29,7 @@ var overlay = document.createElement("div");
 var xscore = document.createElement("div");
 var xhealth = document.createElement("div");
 var xpowerup = document.createElement("div");
+var xenemycount = document.createElement("div");
 var pausediv = document.createElement("div");
 var pausetext = document.createElement("div");
 var volume = document.createElement("div");
@@ -38,6 +39,7 @@ overlay.id = "overlay";
 xscore.id = "xscore";
 xhealth.id = "xhealth";
 xpowerup.id = "xpowerup";
+xenemycount.id = "xenemycount";
 xscore.innerHTML = "Space Cash:  0";
 xhealth.innerHTML = ("Space Health:  " + hero.health);
 xpowerup.innerHTML = "";
@@ -56,6 +58,7 @@ pausediv.appendChild(pausetext);
 overlay.appendChild(xscore);
 overlay.appendChild(xhealth);
 overlay.appendChild(xpowerup);
+overlay.appendChild(xenemycount);
 
 //  MAIN GAME LOOP  //
 var lastTime;
@@ -817,6 +820,8 @@ function handleInput(dt) {
 }
 
 function updateEntities(dt) {
+
+    xenemycount.innerHTML = ("Enemies : " + monsters.length);
 
     for (var x in monsters) {
         var monster = monsters[x];

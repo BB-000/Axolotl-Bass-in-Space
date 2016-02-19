@@ -109,42 +109,42 @@ Npc.prototype = {
             }
         }
 
-        -        /////       ******   DEAD ENEMIES DON'T STACK    **********        ///     ///       ******   DEAD ENEMIES DON'T STACK    **********        ///    ///       ******   DEAD ENEMIES DON'T STACK    **********        ///
--        //else if (this.isDead) {
--        //    if (barNumber % this.barTiming === 0) {
--        //        if (current16thNote % this.timing === 0) {
--        //            //var index = monsters.indexOf(this);
--        //            //monsters.splice(index, 1);
--        //
--        //            this.toRemove = true;
--        //            //samplebb[this.sound].ready = false;
--        //
--        //            if (gameOver === false) {
--        //                score += this.points;
--        //                console.log("" + fishPlay);
--        //
--        //
--        //                console.log(window[this.flag]);
--        //                //this.resetToken();
--        //                //console.log(fishPlay);
--        //                if (window[this.flag] === false) {
--        //                    window[this.flag] = true;
--        //                    if (this.fx === "delay") {
--        //                        playSoundDelay(samplebb[this.sound], this.channel);
--        //                    } else {
--        //                        playSound(samplebb[this.sound], this.channel);
--        //                    }
--        //
--        //                    setTimeout(function () {
--        //                        window[that.flag] = false;
--        //                    }, 100);
--        //                }
--        //            }
--        //        }
--        //    }
--        //}
--
-    },
+        /////       ******   DEAD ENEMIES DON'T STACK    **********        ///     ///       ******   DEAD ENEMIES DON'T STACK    **********        ///    ///       ******   DEAD ENEMIES DON'T STACK    **********        ///
+        //else if (this.isDead) {
+        //    if (barNumber % this.barTiming === 0) {
+        //        if (current16thNote % this.timing === 0) {
+        //            //var index = monsters.indexOf(this);
+        //            //monsters.splice(index, 1);
+        //
+        //            this.toRemove = true;
+        //            //samplebb[this.sound].ready = false;
+        //
+        //            if (gameOver === false) {
+        //                score += this.points;
+        //                console.log("" + fishPlay);
+        //
+        //
+        //                console.log(window[this.flag]);
+        //                //this.resetToken();
+        //                //console.log(fishPlay);
+        //                if (window[this.flag] === false) {
+        //                    window[this.flag] = true;
+        //                    if (this.fx === "delay") {
+        //                        playSoundDelay(samplebb[this.sound], this.channel);
+        //                    } else {
+        //                        playSound(samplebb[this.sound], this.channel);
+       //                    }
+        //
+        //                    setTimeout(function () {
+        //                        window[that.flag] = false;
+        //                    }, 100);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+   },
 
     render: function (ctx) {
         if (this.isDead === false) {
