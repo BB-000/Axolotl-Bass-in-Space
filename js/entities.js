@@ -45,6 +45,7 @@ Npc.prototype = {
     healthdrop: false,
     isPowerUp: false,
     isPowerDrop: false,
+    spriteAnim: false,
 
     update: function () {
 
@@ -152,19 +153,36 @@ Npc.prototype = {
    },
 
     render: function (ctx) {
+        
+
+         if(this.spriteAnim === false) {
         if (this.isDead === false) {
-            ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
+             ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
             ctx.webkitImageSmoothingEnabled = false;
             ctx.msImageSmoothingEnabled = false;
             ctx.imageSmoothingEnabled = false;
 
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
         } else if (this.isDead === true) {
             ctx.save();
-            ctx.globalAlpha = 0.4;                                                                                      // Translucify Dead aliens
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.globalAlpha = 0.4;
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
             ctx.restore();
         }
+    } else {    
+          if (this.isDead === false) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            this.sprite.render(ctx);
+            ctx.restore();
+          } else if (this.isDead === true) {
+              ctx.save();
+              ctx.globalAlpha = 0.4;
+              ctx.translate(this.x, this.y);
+              this.sprite.render(ctx);
+              ctx.restore();
+          }  
+    }
     },
 
     getFlock: function () {
@@ -174,8 +192,7 @@ Npc.prototype = {
 
 };
 
-function MonsterChase() {
-}
+function MonsterChase() {}
 MonsterChase.prototype = Object.create(Npc.prototype);
 MonsterChase.prototype.move = function (dt) {
 
@@ -352,7 +369,8 @@ var Bug = function (position) {
     this.sizex = xx;
     this.sizey = xx;
     this.monsterImage = "images/PrawnYellow.png";
-    this.sprite = new Sprite('images/spritePrawnYellow.png', [0,0] , [19, 16], 8 [0,1,2,3,4,5,6,7,8]);
+    this.spriteAnim = true,
+    this.sprite = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0,0] , [19, 16], 8 [0,1,2,3,4,5,6,7]);
     this.sound = rand(5, 7);
     this.name = "bug";
     this.shooter = true;
@@ -722,6 +740,7 @@ Planet.prototype = {
     },
 
     render: function (ctx) {
+     
         if (this.isDead === false) {
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
         } else if (this.isDead === true) {
@@ -730,6 +749,7 @@ Planet.prototype = {
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
             ctx.restore();
         }
+    
     },
 
     xCenter: function () {

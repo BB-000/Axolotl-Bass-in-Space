@@ -218,6 +218,8 @@ function init() {
     spawnPlanet(1, Planet14);
     spawnPlanet(1, BlackHole);
 
+    spawnMonster(20, Bug);
+
     lastTime = Date.now();
 
     main();                                                                                                             // Call main game loop!
@@ -271,7 +273,7 @@ resources.load([
     'images/Planet16.png',
     'images/BlackHole.png',
     'images/MasterBlaster.png',
-    'spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png'
+    'Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png'
 
 ]);
 resources.onReady(init);
