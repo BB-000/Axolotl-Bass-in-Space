@@ -218,8 +218,6 @@ function init() {
     spawnPlanet(1, Planet14);
     spawnPlanet(1, BlackHole);
 
-    spawnMonster(20, Bug);
-
     lastTime = Date.now();
 
     main();                                                                                                             // Call main game loop!
@@ -273,7 +271,9 @@ resources.load([
     'images/Planet16.png',
     'images/BlackHole.png',
     'images/MasterBlaster.png',
-    'Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png'
+    'Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png',
+    'Spritesheets/MasterBlaster-blink__24fps.png',
+    'Spritesheets/MasterBlaster-Explode__24fps-short.png'
 
 ]);
 resources.onReady(init);
@@ -590,6 +590,8 @@ function audioSchedule(beatNumber) {
                     spawnMonster(1, HealthFlyUp);
                     spawnMonster(1, GunUp);
                     spawnMonster(1, SlowPotion);
+
+                    spawnMonster(5, MasterBlaster)
                     //console.log("spawned Powers");
                 }
             }
@@ -836,6 +838,10 @@ function updateEntities(dt) {
     for (var x in monsters) {
         var monster = monsters[x];
         monster.update();
+        if (monster.spriteAnim === true) {
+            monster.sprite.update(dt);
+            // console.log("spriteUpdate");
+        }
 
         if (typeof monster.move === 'function') {
             if (!monster.isDead) {
@@ -1032,6 +1038,8 @@ function initStats() {
     spawnPlanet(1, Planet13);
     spawnPlanet(1, Planet14);
     spawnPlanet(1, BlackHole);
+
+    spawnMonster(20, MasterBlaster);
 
 }
 

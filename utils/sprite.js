@@ -15,8 +15,11 @@
             this._index += this.speed*dt;
         },
 
-        render: function(ctx) {
+        render: function(ctx, sizeX, sizeY) {
             var frame;
+
+            this.sizeX = typeof sizeX === 'number' ? sizeX : this.size[0];
+            this.sizeY = typeof sizeY === 'number' ? sizeY : this.size[1];
 
             if(this.speed > 0) {
                 var max = this.frames.length;
@@ -47,7 +50,7 @@
                           x, y,
                           this.size[0], this.size[1],
                           0, 0,
-                          this.size[0], this.size[1]);
+                          this.sizeX, this.sizeY);
         }
     };
 

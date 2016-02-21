@@ -155,9 +155,10 @@ Npc.prototype = {
     render: function (ctx) {
         
 
-         if(this.spriteAnim === false) {
+    if(this.spriteAnim === false) {
+
         if (this.isDead === false) {
-             ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
+            ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
             ctx.webkitImageSmoothingEnabled = false;
             ctx.msImageSmoothingEnabled = false;
             ctx.imageSmoothingEnabled = false;
@@ -170,16 +171,24 @@ Npc.prototype = {
             ctx.restore();
         }
     } else {    
+
           if (this.isDead === false) {
+            ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
+
             ctx.save();
             ctx.translate(this.x, this.y);
-            this.sprite.render(ctx);
+            // console.log(this.x, this.y);
+            this.sprite.render(ctx, this.sizex, this.sizey);
             ctx.restore();
           } else if (this.isDead === true) {
               ctx.save();
-              ctx.globalAlpha = 0.4;
+              ctx.globalAlpha = 0.5;
               ctx.translate(this.x, this.y);
-              this.sprite.render(ctx);
+              // Make this work // Push to explosions? 
+              this.spriteDie.render(ctx, this.sizex, this.sizey);
               ctx.restore();
           }  
     }
@@ -370,7 +379,8 @@ var Bug = function (position) {
     this.sizey = xx;
     this.monsterImage = "images/PrawnYellow.png";
     this.spriteAnim = true,
-    this.sprite = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0,0] , [19, 16], 8 [0,1,2,3,4,5,6,7]);
+    this.sprite = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0, 0], [19, 16], 8, [0,1,2,3,4,5,6,7]);
+    this.spriteDie = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0, 0], [19, 16], 8, [0,1,2,3,4,5,6,7]);
     this.sound = rand(5, 7);
     this.name = "bug";
     this.shooter = true;
@@ -660,6 +670,9 @@ var MasterBlaster = function (position) {
     this.sizey = 64;
     this.shooter = true;
     this.bbspeed = 9;
+    this.spriteAnim = true;
+    this.sprite = new Sprite('Spritesheets/MasterBlaster-blink__24fps.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10]),
+    this.spriteDie = new Sprite('Spritesheets/MasterBlaster-Explode__24fps-short.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]),
     this.monsterImage = "images/MasterBlaster.png";
     this.token = "masterblasterShoot";
     this.sound = 84;
@@ -701,8 +714,7 @@ var Boulder = function (position) {
 Boulder.prototype = Object.create(MonsterFly.prototype);
 
 
-function Planet() {
-}
+function Planet() {}
 Planet.prototype = {
 
     isDead: false,
@@ -1231,4 +1243,6 @@ var hero = {
     health: 420,
     speed: 300, // pixels per second
     image: "images/Hero.png"
+
+    // sprite : new Sprite('')
 };
