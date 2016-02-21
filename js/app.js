@@ -270,7 +270,8 @@ resources.load([
     'images/Planet15.png',
     'images/Planet16.png',
     'images/BlackHole.png',
-    'images/MasterBlaster.png'
+    'images/MasterBlaster.png',
+    'spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png'
 
 ]);
 resources.onReady(init);
@@ -551,8 +552,8 @@ function audioSchedule(beatNumber) {
             spawnBoulder(1, Boulder);
         }
     }
-
-    if (score > 20000) {  // hihats
+    // HI-HATS
+    if (score > 20000) { 
         if (barNumber % 4 === 0 && beatNumber === 0) {
             playSound(samplebb[23], gainNode3);
         }
@@ -577,7 +578,6 @@ function audioSchedule(beatNumber) {
             }
         }
     }
-
 
     //SPAWN ENEMIES EVERY 4 BARS   //
     if (!paused) {

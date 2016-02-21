@@ -29,8 +29,7 @@ var masterblasterPlay = false;
 
 var enemyKillCount = 0;
 
-function Npc() {
-}
+function Npc() {}
 Npc.prototype = {
 
     isDead: false,
@@ -353,6 +352,7 @@ var Bug = function (position) {
     this.sizex = xx;
     this.sizey = xx;
     this.monsterImage = "images/PrawnYellow.png";
+    this.sprite = new Sprite('images/spritePrawnYellow.png', [0,0] , [19, 16], 8 [0,1,2,3,4,5,6,7,8]);
     this.sound = rand(5, 7);
     this.name = "bug";
     this.shooter = true;
