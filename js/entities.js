@@ -27,6 +27,8 @@ var wizardgreenPlay = false;
 var jellypurplePlay = false;
 var masterblasterPlay = false;
 
+var enemyKillCount = 0;
+
 function Npc() {
 }
 Npc.prototype = {
@@ -82,6 +84,10 @@ Npc.prototype = {
 
                     if (this.isPowerUp) {
                         this.powerUp();                                                                                 // Apply powerup if powerup
+                    }
+                    // Update counter ( not boulders )
+                    if (this.points > 2) {
+                        enemyKillCount += 1;
                     }
                     if (gameOver === false) {
                         score += this.points;
