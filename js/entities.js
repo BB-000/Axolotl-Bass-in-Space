@@ -78,9 +78,14 @@ Npc.prototype = {
 
         //       ******  DEAD ENEMIES STACK  *******        //
         else if (this.isDead === true) {
+            if(this.spriteAnim === true){
+                // set sprite frames to new ones
+                this.sprite.frames = this.dieFrames;
+            }
             if (window[this.flag] === false) {
                 if (this.timing()) {                                                                                    // Wait for cue...
                     this.toRemove = true;
+
 
                     if (this.isPowerUp) {
                         this.powerUp();                                                                                 // Apply powerup if powerup
@@ -188,7 +193,7 @@ Npc.prototype = {
               ctx.globalAlpha = 0.5;
               ctx.translate(this.x, this.y);
               // Make this work // Push to explosions? 
-              this.spriteDie.render(ctx, this.sizex, this.sizey);
+              this.sprite.render(ctx, this.sizex, this.sizey);
               ctx.restore();
           }  
     }
@@ -671,8 +676,9 @@ var MasterBlaster = function (position) {
     this.shooter = true;
     this.bbspeed = 9;
     this.spriteAnim = true;
-    this.sprite = new Sprite('Spritesheets/MasterBlaster-blink__24fps.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10]),
-    this.spriteDie = new Sprite('Spritesheets/MasterBlaster-Explode__24fps-short.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]),
+    // this.sprite = new Sprite('Spritesheets/MasterBlaster-blink__24fps.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10]);
+    this.sprite = new Sprite('Spritesheets/MasterBlaster-Explode__24fps-short.png', [0,0], [24, 22], 24, [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,5,4,3,2,1,0]);
+    this.dieFrames = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
     this.monsterImage = "images/MasterBlaster.png";
     this.token = "masterblasterShoot";
     this.sound = 84;
