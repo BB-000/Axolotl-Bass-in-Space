@@ -29,6 +29,9 @@ var overlay = document.createElement("div");
 var xscore = document.createElement("div");
 var xhealth = document.createElement("div");
 var xpowerup = document.createElement("div");
+var xenemycount = document.createElement("div");
+var xbulletcount = document.createElement("div");
+var xenemykillcount = document.createElement("div");
 var pausediv = document.createElement("div");
 var pausetext = document.createElement("div");
 var volume = document.createElement("div");
@@ -38,6 +41,9 @@ overlay.id = "overlay";
 xscore.id = "xscore";
 xhealth.id = "xhealth";
 xpowerup.id = "xpowerup";
+xenemycount.id = "xenemycount";
+xbulletcount.id = "xbulletcount";
+xenemykillcount.id = "xenemykillcount";
 xscore.innerHTML = "Space Cash:  0";
 xhealth.innerHTML = ("Space Health:  " + hero.health);
 xpowerup.innerHTML = "";
@@ -56,6 +62,9 @@ pausediv.appendChild(pausetext);
 overlay.appendChild(xscore);
 overlay.appendChild(xhealth);
 overlay.appendChild(xpowerup);
+overlay.appendChild(xbulletcount);
+overlay.appendChild(xenemycount);
+overlay.appendChild(xenemykillcount);
 
 //  MAIN GAME LOOP  //
 var lastTime;
@@ -261,7 +270,10 @@ resources.load([
     'images/Planet15.png',
     'images/Planet16.png',
     'images/BlackHole.png',
-    'images/MasterBlaster.png'
+    'images/MasterBlaster.png',
+    'Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png',
+    'Spritesheets/MasterBlaster-blink__24fps.png',
+    'Spritesheets/MasterBlaster-Explode__24fps-short.png'
 
 ]);
 resources.onReady(init);
@@ -542,8 +554,8 @@ function audioSchedule(beatNumber) {
             spawnBoulder(1, Boulder);
         }
     }
-
-    if (score > 20000) {  // hihats
+    // HI-HATS
+    if (score > 20000) { 
         if (barNumber % 4 === 0 && beatNumber === 0) {
             playSound(samplebb[23], gainNode3);
         }
@@ -569,7 +581,6 @@ function audioSchedule(beatNumber) {
         }
     }
 
-
     //SPAWN ENEMIES EVERY 4 BARS   //
     if (!paused) {
         if (barNumber % 4 === 0 && beatNumber === 0) {
@@ -579,6 +590,8 @@ function audioSchedule(beatNumber) {
                     spawnMonster(1, HealthFlyUp);
                     spawnMonster(1, GunUp);
                     spawnMonster(1, SlowPotion);
+
+                    spawnMonster(5, MasterBlaster)
                     //console.log("spawned Powers");
                 }
             }
@@ -818,9 +831,17 @@ function handleInput(dt) {
 
 function updateEntities(dt) {
 
+    xenemycount.innerHTML = ("Enemies : " + monsters.length);
+    xenemykillcount.innerHTML = ("Enemies Destroyed : " + enemyKillCount);
+    xbulletcount.innerHTML = ("Bullets : " + bullets.length);
+
     for (var x in monsters) {
         var monster = monsters[x];
         monster.update();
+        if (monster.spriteAnim === true) {
+            monster.sprite.update(dt);
+            // console.log("spriteUpdate");
+        }
 
         if (typeof monster.move === 'function') {
             if (!monster.isDead) {
@@ -1017,6 +1038,8 @@ function initStats() {
     spawnPlanet(1, Planet13);
     spawnPlanet(1, Planet14);
     spawnPlanet(1, BlackHole);
+
+    spawnMonster(20, MasterBlaster);
 
 }
 

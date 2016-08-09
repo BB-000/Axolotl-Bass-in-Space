@@ -27,8 +27,9 @@ var wizardgreenPlay = false;
 var jellypurplePlay = false;
 var masterblasterPlay = false;
 
-function Npc() {
-}
+var enemyKillCount = 0;
+
+function Npc() {}
 Npc.prototype = {
 
     isDead: false,
@@ -44,6 +45,7 @@ Npc.prototype = {
     healthdrop: false,
     isPowerUp: false,
     isPowerDrop: false,
+    spriteAnim: false,
 
     update: function () {
 
@@ -76,12 +78,21 @@ Npc.prototype = {
 
         //       ******  DEAD ENEMIES STACK  *******        //
         else if (this.isDead === true) {
+            if(this.spriteAnim === true){
+                // set sprite frames to new ones
+                this.sprite.frames = this.dieFrames;
+            }
             if (window[this.flag] === false) {
                 if (this.timing()) {                                                                                    // Wait for cue...
                     this.toRemove = true;
 
+
                     if (this.isPowerUp) {
                         this.powerUp();                                                                                 // Apply powerup if powerup
+                    }
+                    // Update counter ( not boulders )
+                    if (this.points > 2) {
+                        enemyKillCount += 1;
                     }
                     if (gameOver === false) {
                         score += this.points;
@@ -108,22 +119,84 @@ Npc.prototype = {
                 window[this.token] = false;                                                                             // Stop shootsound if dead
             }
         }
-    },
+
+        /////       ******   DEAD ENEMIES DON'T STACK    **********        ///     ///       ******   DEAD ENEMIES DON'T STACK    **********        ///    ///       ******   DEAD ENEMIES DON'T STACK    **********        ///
+        //else if (this.isDead) {
+        //    if (barNumber % this.barTiming === 0) {
+        //        if (current16thNote % this.timing === 0) {
+        //            //var index = monsters.indexOf(this);
+        //            //monsters.splice(index, 1);
+        //
+        //            this.toRemove = true;
+        //            //samplebb[this.sound].ready = false;
+        //
+        //            if (gameOver === false) {
+        //                score += this.points;
+        //                console.log("" + fishPlay);
+        //
+        //
+        //                console.log(window[this.flag]);
+        //                //this.resetToken();
+        //                //console.log(fishPlay);
+        //                if (window[this.flag] === false) {
+        //                    window[this.flag] = true;
+        //                    if (this.fx === "delay") {
+        //                        playSoundDelay(samplebb[this.sound], this.channel);
+        //                    } else {
+        //                        playSound(samplebb[this.sound], this.channel);
+       //                    }
+        //
+        //                    setTimeout(function () {
+        //                        window[that.flag] = false;
+        //                    }, 100);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+   },
 
     render: function (ctx) {
+        
+
+    if(this.spriteAnim === false) {
+
         if (this.isDead === false) {
             ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
             ctx.webkitImageSmoothingEnabled = false;
             ctx.msImageSmoothingEnabled = false;
             ctx.imageSmoothingEnabled = false;
 
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
         } else if (this.isDead === true) {
             ctx.save();
-            ctx.globalAlpha = 0.4;                                                                                      // Translucify Dead aliens
-            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.sizex, this.sizey);
+            ctx.globalAlpha = 0.4;
+            ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
             ctx.restore();
         }
+    } else {    
+
+          if (this.isDead === false) {
+            ctx.mozImageSmoothingEnabled = false;                                                                       // Stop browsers Anti Aliasing pixel art!
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
+
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            // console.log(this.x, this.y);
+            this.sprite.render(ctx, this.sizex, this.sizey);
+            ctx.restore();
+          } else if (this.isDead === true) {
+              ctx.save();
+              ctx.globalAlpha = 0.5;
+              ctx.translate(this.x, this.y);
+              // Make this work // Push to explosions? 
+              this.sprite.render(ctx, this.sizex, this.sizey);
+              ctx.restore();
+          }  
+    }
     },
 
     getFlock: function () {
@@ -133,8 +206,7 @@ Npc.prototype = {
 
 };
 
-function MonsterChase() {
-}
+function MonsterChase() {}
 MonsterChase.prototype = Object.create(Npc.prototype);
 MonsterChase.prototype.move = function (dt) {
 
@@ -190,8 +262,7 @@ MonsterRun.prototype.move = function (dt) {
 };
 
 
-function MonsterShoot() {
-}
+function MonsterShoot() {}
 MonsterShoot.prototype = Object.create(MonsterChase.prototype);
 MonsterShoot.prototype.shoot = function () {
 
@@ -210,8 +281,7 @@ MonsterShoot.prototype.shoot = function () {
 };
 
 
-function MonsterFly() {
-}
+function MonsterFly() {}
 MonsterFly.prototype = Object.create(Npc.prototype);
 MonsterFly.prototype.move = function (dt) {
 
@@ -313,6 +383,9 @@ var Bug = function (position) {
     this.sizex = xx;
     this.sizey = xx;
     this.monsterImage = "images/PrawnYellow.png";
+    this.spriteAnim = true,
+    this.sprite = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0, 0], [19, 16], 8, [0,1,2,3,4,5,6,7]);
+    this.spriteDie = new Sprite('Spritesheets/YellowBeetle-Wiggle-Var2-flash2__8fps-long.png', [0, 0], [19, 16], 8, [0,1,2,3,4,5,6,7]);
     this.sound = rand(5, 7);
     this.name = "bug";
     this.shooter = true;
@@ -602,6 +675,10 @@ var MasterBlaster = function (position) {
     this.sizey = 64;
     this.shooter = true;
     this.bbspeed = 9;
+    this.spriteAnim = true;
+    // this.sprite = new Sprite('Spritesheets/MasterBlaster-blink__24fps.png', [0,0], [24, 22], 24, [0,1,2,3,4,5,6,7,8,9,10]);
+    this.sprite = new Sprite('Spritesheets/MasterBlaster-Explode__24fps-short.png', [0,0], [24, 22], 24, [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,5,4,3,2,1,0]);
+    this.dieFrames = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
     this.monsterImage = "images/MasterBlaster.png";
     this.token = "masterblasterShoot";
     this.sound = 84;
@@ -643,8 +720,7 @@ var Boulder = function (position) {
 Boulder.prototype = Object.create(MonsterFly.prototype);
 
 
-function Planet() {
-}
+function Planet() {}
 Planet.prototype = {
 
     isDead: false,
@@ -682,6 +758,7 @@ Planet.prototype = {
     },
 
     render: function (ctx) {
+     
         if (this.isDead === false) {
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
         } else if (this.isDead === true) {
@@ -690,6 +767,7 @@ Planet.prototype = {
             ctx.drawImage(resources.get(this.monsterImage), this.x, this.y, this.width, this.height);
             ctx.restore();
         }
+    
     },
 
     xCenter: function () {
@@ -1171,4 +1249,6 @@ var hero = {
     health: 420,
     speed: 300, // pixels per second
     image: "images/Hero.png"
+
+    // sprite : new Sprite('')
 };
