@@ -260,7 +260,7 @@ resources.load([
     'images/Potion1.png',
     'images/Potion2.png',
     'images/Potion3.png',
-    'images/Wizard.png',
+    'images/wizard.png',
     'images/WizardGreen.png',
     'images/WizardRed.png',
     'images/Planet11.png',
