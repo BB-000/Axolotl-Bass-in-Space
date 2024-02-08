@@ -4,4 +4,4 @@ V0.0.2.2
 
 Experimental Audio-Visual Game --- HTML5 Canvas / Web Audio API 
 
-http://users.sussex.ac.uk/~bc216/axolotlbass/ 
+https://bb-000.github.io/Axolotl-Bass-in-Space/
